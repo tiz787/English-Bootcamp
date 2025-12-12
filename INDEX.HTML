@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neuro-English Bootcamp Pro v5.0</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Barra de Herramientas Fija -->
+    <div class="toolbar">
+      <div class="toolbar-content">
+       
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="emoji">🔥</span>
+            <span class="value" id="streak-display">0</span>
+            <span class="label">días</span>
+          </div>
+          <div class="stat-item">
+            <span class="emoji">⭐</span>
+            <span class="value" id="xp-display">0</span>
+            <span class="label">XP</span>
+          </div>
+          <div class="stat-item">
+            <span class="emoji">📚</span>
+            <span class="value" id="stat-days">0/15</span>
+            <span class="label">días</span>
+          </div>
+          <div class="stat-item">
+            <span class="emoji">🎯</span>
+            <span class="value" id="stat-accuracy">0%</span>
+            <span class="label">precisión</span>
+          </div>
+          <div class="stat-item">
+            <span class="emoji">🃏</span>
+            <span class="value" id="stat-cards">0</span>
+            <span class="label">cards</span>
+          </div>
+          <div class="stat-item">
+            <span class="emoji">⏱️</span>
+            <span class="value" id="stat-time">0h</span>
+            <span class="label">tiempo</span>
+          </div>
+        </div>
+        
+        <div class="pomodoro-widget">
+          <span id="pomodoroTime" class="pomodoro-time">25:00</span>
+          <button class="pomodoro-btn" onclick="startPomodoro()" title="Iniciar">▶️</button>
+          <button class="pomodoro-btn" onclick="pausePomodoro()" title="Pausar">⏸️</button>
+          <button class="pomodoro-btn" onclick="resetPomodoro()" title="Reiniciar">🔄</button>
+        </div>
+        
+        <button id="themeToggle" onclick="toggleTheme()" title="Cambiar tema">🌙</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Progreso Global -->
+      <div class="global-progress">
+        <div class="global-progress-header">
+          <span class="global-progress-title">🚀 Progreso del Bootcamp</span>
+          <span class="global-progress-value" id="progress-label">0%</span>
+        </div>
+        <div class="global-progress-bar">
+          <div class="global-progress-fill" id="global-progress-bar" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Navegación por Tabs -->
+      <div class="nav-tabs">
+        <button class="nav-tab active" onclick="showTab('lessons')">📖 Lecciones</button>
+        <button class="nav-tab" onclick="showTab('flashcards')">🃏 Flashcards</button>
+        <button class="nav-tab" onclick="showTab('vocabulary')">📝 Vocabulario</button>
+        <button class="nav-tab" onclick="showTab('practice')">🎤 Práctica</button>
+      </div>
+
+      <!-- TAB: Flashcards -->
+      <div class="tab-content" id="tab-flashcards">
+        <h2 style="margin-bottom:20px;">🃏 Flashcards Interactivas (50+ tarjetas)</h2>
+        <p style="color:var(--text-light); margin-bottom:20px;">Haz clic en la tarjeta para voltearla. Marca "Lo sé" o "Repetir". Las tarjetas marcadas para repetir se mostrarán al final.</p>
+        
+        <!-- Filtro por día -->
+        <div class="filter-container">
+          <label for="flashcard-day-filter" class="filter-label">📅 Filtrar por día:</label>
+          <select id="flashcard-day-filter" class="day-filter-select" onchange="onFlashcardFilterChange(this.value)">
+            <option value="all">📚 Todos (Acumulado)</option>
+          </select>
+        </div>
+        
+        <div class="flashcard-container">
+          <div class="flashcard" id="current-flashcard" onclick="flipCard()">
+            <div class="flashcard-face flashcard-front">
+              <span class="fc-topic-badge" id="fc-topic"></span>
+              <div class="flashcard-word" id="fc-word">Loading...</div>
+              <div class="flashcard-pronunciation" id="fc-pronunciation">/pronunciation/</div>
+              <div class="flashcard-hint" id="fc-hint">Cargando...</div>
+              <div style="display:flex; gap:10px; margin-top:15px; justify-content:center;">
+                <button class="btn-speak" onclick="event.stopPropagation(); speakCard()" style="font-size:1.5rem;">🔊</button>
+                <button class="btn-usage" onclick="event.stopPropagation(); showWordUsage()">💡 ¿Cuándo usar?</button>
+              </div>
+            </div>
+            <div class="flashcard-face flashcard-back">
+              <div class="flashcard-translation" id="fc-translation">Traducción</div>
+              <div class="flashcard-example" id="fc-example">"Example sentence"</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flashcard-nav">
+          <button class="fc-prev" onclick="prevCard()">⬅️ Anterior</button>
+          <button class="fc-repeat" onclick="markRepeat()">🔁 Repetir</button>
+          <button class="fc-know" onclick="markKnown()">✅ Lo sé</button>
+          <button class="fc-next" onclick="nextCard()">Siguiente ➡️</button>
+        </div>
+        
+        <div style="text-align:center; margin-top:15px; color:var(--text-light);">
+          Tarjeta <span id="fc-current">1</span> de <span id="fc-total">0</span>
+        </div>
+      </div>
+
+      <!-- TAB: Vocabulario Técnico -->
+      <div class="tab-content" id="tab-vocabulary">
+        <!-- Filtro por día -->
+        <div class="filter-container" style="margin-bottom:25px;">
+          <label for="vocab-day-filter" class="filter-label">📅 Filtrar por día:</label>
+          <select id="vocab-day-filter" class="day-filter-select" onchange="onVocabFilterChange(this.value)">
+            <option value="all">📚 Todos (Acumulado)</option>
+          </select>
+          <button class="btn-exam" onclick="startVocabTest()" style="margin-left:15px;">
+            🧪 Test Rápido
+          </button>
+        </div>
+
+        <div class="vocab-section">
+          <div class="vocab-header">
+            <h2>📝 Vocabulario de Programación</h2>
+            <span style="color:var(--text-light);">Esencial para entrevistas</span>
+          </div>
+          <div class="vocab-grid" id="vocab-programming">
+            <!-- Se llena con JS -->
+          </div>
+        </div>
+
+        <div class="vocab-section">
+          <div class="vocab-header">
+            <h2>💼 Vocabulario de Negocios</h2>
+            <span style="color:var(--text-light);">Para reuniones y emails</span>
+          </div>
+          <div class="vocab-grid" id="vocab-business">
+            <!-- Se llena con JS -->
+          </div>
+        </div>
+
+        <div class="vocab-section">
+          <div class="vocab-header">
+            <h2>🗣️ Frases de Conversación</h2>
+            <span style="color:var(--text-light);">Para el día a día</span>
+          </div>
+          <div class="vocab-grid" id="vocab-phrases">
+            <!-- Se llena con JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Práctica Oral -->
+      <div class="tab-content" id="tab-practice">
+        <h2 style="margin-bottom:20px;">🎤 Práctica de Pronunciación</h2>
+        
+        <div class="pedagogy-box">
+          <div class="pedagogy-title">🧠 Técnica: Escucha → Repite → Compara</div>
+          <p>Escucha la frase, grábate repitiéndola, y compara tu audio con el original.</p>
+        </div>
+
+        <div style="background:var(--card-bg); padding:25px; border-radius:16px; margin:20px 0;">
+          <h4 style="margin-bottom:15px;">Frase del día:</h4>
+          <div style="font-size:1.4rem; font-weight:600; color:var(--primary); margin-bottom:15px;" id="practice-phrase">
+            "I'm working on a new feature for the application."
+          </div>
+          <button class="btn-action" onclick="speakPracticePhrase()">
+            🔊 Escuchar Pronunciación
+          </button>
+        </div>
+
+        <div style="background:#fef3c7; padding:20px; border-radius:12px; border-left:4px solid var(--accent);">
+          <h4 style="margin:0 0 10px 0; color:#b45309;">💡 Tip de Pronunciación</h4>
+          <p id="pronunciation-tip" style="margin:0;">En "working", la 'g' es casi invisible. Suena más como "workin'".</p>
+        </div>
+
+        <h3 style="margin-top:30px;">📋 Frases para Practicar</h3>
+        
+        <!-- Filtro por día -->
+        <div class="filter-container" style="margin:15px 0;">
+          <label for="practice-day-filter" class="filter-label">📅 Filtrar por día:</label>
+          <select id="practice-day-filter" class="day-filter-select" onchange="onPracticeFilterChange(this.value)">
+            <option value="all">📚 Todos (Acumulado)</option>
+          </select>
+        </div>
+        
+        <div id="practice-sentences" style="display:grid; gap:10px; margin-top:15px;">
+          <!-- Se llena con JS -->
+        </div>
+      </div>
+
+      <!-- TAB: Lecciones (contenido original) -->
+      <div class="tab-content active" id="tab-lessons">
+
+      <!-- TAB: Lecciones (contenido original) -->
+      <div class="tab-content active" id="tab-lessons">
+
+      <!-- INTRODUCCION PEDAGOGICA -->
+      <div
+        style="
+          background: white;
+          padding: 25px;
+          border-radius: 12px;
+          margin-bottom: 40px;
+          border-left: 5px solid var(--primary);
+        "
+      >
+        <h3 style="margin-top: 0; color: var(--primary)">
+          👨‍🏫 Sistema de Progreso Mejorado:
+        </h3>
+        <p>
+          Esta página ahora <strong>guarda automáticamente</strong> tus
+          resultados. Los tests se pueden repetir hasta <strong>3 veces</strong> por día.
+          Cada semana tiene un <strong>examen final</strong> (2 intentos con preguntas diferentes).
+        </p>
+        <div style="margin-top:15px; padding:15px; background:#fef3c7; border-radius:8px;">
+          <strong>🚀 ¿Quieres saltar semanas?</strong>
+          <p style="margin:5px 0;">Si ya tienes conocimientos previos, puedes hacer un examen de validación para saltar a una semana más avanzada.</p>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+            <button class="btn-action btn-outline" onclick="startSkipExam(2)">Saltar a Semana 2</button>
+            <button class="btn-action btn-outline" onclick="startSkipExam(3)">Saltar a Semana 3</button>
+            <button class="btn-action btn-outline" onclick="startSkipExam(4)">Saltar a Semana 4</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SEMANA 1 ================= -->
+      <div class="week-section" id="week-1">
+        <div class="week-header">
+          <span class="week-badge">SEMANA 1</span>
+          <div class="week-title">Configuración Neuronal (Dec 11 - Dec 14)</div>
+          <button class="btn-exam" onclick="startWeeklyExam(1)">📝 Examen Semana 1</button>
+        </div>
+
+        <!-- Prompt Semanal -->
+        <div class="ai-prompt-container">
+          <span class="prompt-label"
+            >🤖 Tu Asistente de Conversación (Copia esto):</span
+          >
+          <div class="prompt-code" id="p1">
+            "Act as an expert English pedagogue (TPR & Comprehensible Input
+            method). I am a software engineering student. Start date: Dec 11.
+            WEEK 1 FOCUS: Pattern Recognition & Pronunciation (Shadowing). YOUR
+            INSTRUCTIONS: 1. Don't explain grammar rules yet. Show me examples.
+            2. If I make a mistake, give me the correct sentence and ask me to
+            repeat it 3 times (Repetition Loop). 3. Ask me simple questions
+            about code/technology using 'Do' and 'Is'. Start by saying: 'Welcome
+            to the lab. Let's calibrate your English. Tell me one thing you
+            code.'"
+          </div>
+          <button class="btn-action" onclick="copyToClipboard('p1')">
+            Copiar Prompt
+          </button>
+        </div>
+
+        <!-- DIA 1: JUEVES -->
+        <div class="day-card active-day" id="card-d1">
+          <div class="day-header" onclick="toggleDay('d1')">
+            <div>
+              <span class="day-date">Jueves 11 Dic</span>
+              <span class="day-title">El Motor Lógico y "Shadowing"</span>
+            </div>
+            <div class="toggle-icon">+</div>
+          </div>
+          <div class="day-body" id="d1">
+            <!-- Resumen si ya se completó -->
+            <div id="summary-d1" class="result-box"></div>
+
+            <div class="pedagogy-box">
+              <div class="pedagogy-title">
+                🧠 Neuro-Ciencia: Neuronas Espejo
+              </div>
+              <p>
+                Hoy no vas a "leer". Vas a imitar. La técnica de
+                <strong>Shadowing</strong> activa el área de Broca. Al escuchar
+                y hablar simultáneamente (con milisegundos de retraso), obligas
+                a tu cerebro a copiar la entonación y el ritmo.
+              </p>
+            </div>
+
+            <div class="activity-block">
+              <div class="method-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <h4>Input Comprensible (20 min)</h4>
+                  <p>
+                    Mira un video de "Present Simple" pero
+                    <strong>no tomes notas</strong>. Solo entiende el concepto:
+                    En inglés, el sujeto es el jefe. Sin jefe, no hay oración.
+                    (I code
+                    <button class="btn-speak" onclick="speak('I code')">
+                      🔊</button
+                    >, She codes
+                    <button class="btn-speak" onclick="speak('She codes')">
+                      🔊</button
+                    >). <br /><em
+                      >Busca: "Inglés desde cero Francisco Ochoa Lección 1"</em
+                    >
+                  </p>
+                </div>
+              </div>
+
+              <div class="method-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                  <h4>Shadowing Activo (30 min)</h4>
+                  <p>
+                    Busca un video corto (1 min) en inglés con subtítulos (ej:
+                    "A day in the life of a programmer").
+                  </p>
+                  <ul>
+                    <li>Paso A: Escucha sin mirar texto.</li>
+                    <li>Paso B: Lee y escucha.</li>
+                    <li>
+                      Paso C (Shadowing): Pon el video y
+                      <strong>habla encima del audio</strong> intentando copiar
+                      su velocidad y emoción. Hazlo 5 veces.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="neuro-boost">
+              <div class="boost-header">🚀 Neuro-Boost (Opcional - 45 min)</div>
+              <p>
+                <strong>Cambio de Entorno Digital:</strong> Cambia el idioma de
+                tu celular a Inglés. Navegar por los menús ("Settings",
+                "Display") te enseñará vocabulario pasivo.
+              </p>
+            </div>
+
+            <button
+              class="btn-action btn-outline"
+              style="width: 100%"
+              onclick="startQuiz('d1')"
+            >
+              ⚡ Test Rápido de Patrones
+            </button>
+            <div id="quiz-d1" class="quiz-panel"></div>
+          </div>
+        </div>
+
+        <!-- DIA 2: VIERNES -->
+        <div class="day-card active-day" id="card-d2">
+          <div class="day-header" onclick="toggleDay('d2')">
+            <div>
+              <span class="day-date">Viernes 12 Dic</span>
+              <span class="day-title"
+                >Active Recall: Preguntas de Ingeniero</span
+              >
+            </div>
+            <div class="toggle-icon">+</div>
+          </div>
+          <div class="day-body" id="d2">
+            <div id="summary-d2" class="result-box"></div>
+
+            <div class="pedagogy-box">
+              <div class="pedagogy-title">
+                🧠 Neuro-Ciencia: Efecto de Generación
+              </div>
+              <p>
+                Leer una respuesta es fácil. Generarla desde cero es difícil,
+                pero ahí es donde ocurre el aprendizaje real. Hoy usaremos
+                <strong>Active Recall</strong>.
+              </p>
+            </div>
+
+            <div class="activity-block">
+              <div class="method-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <h4>El Algoritmo DO/DOES (20 min)</h4>
+                  <p>
+                    Piensa en DO/DOES como un operador lógico `if(question)`. Si
+                    es pregunta, pon DO al inicio. <br /><em
+                      >Ejercicio mental:</em
+                    >
+                    ¿Cómo le preguntas a tu PC si funciona? -> "Do you work?"
+                    <button class="btn-speak" onclick="speak('Do you work?')">
+                      🔊</button
+                    >.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <button
+              class="btn-action btn-outline"
+              style="width: 100%"
+              onclick="startQuiz('d2')"
+            >
+              ⚡ Test de Lógica Inversa
+            </button>
+            <div id="quiz-d2" class="quiz-panel"></div>
+          </div>
+        </div>
+
+        <!-- DIA 3: SABADO -->
+        <div class="day-card weekend" id="card-d3">
+          <div class="day-header" onclick="toggleDay('d3')">
+            <div>
+              <span class="day-date">Sábado 13 Dic</span>
+              <span class="day-title">Memoria Espacial y Contexto</span>
+            </div>
+            <div class="toggle-icon">+</div>
+          </div>
+          <div class="day-body" id="d3">
+            <div id="summary-d3" class="result-box"></div>
+
+            <div class="pedagogy-box">
+              <div class="pedagogy-title">🧠 Neuro-Ciencia: Método de Loci</div>
+              <p>
+                El cerebro humano evolucionó para recordar lugares. Hoy
+                aprenderemos vocabulario (Preposiciones y Objetos) vinculándolos
+                a tu espacio físico real.
+              </p>
+            </div>
+
+            <div class="activity-block">
+              <div class="method-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <h4>Etiquetado Físico (30 min)</h4>
+                  <p>
+                    Toma Post-its. Escribe oraciones completas: "The laptop is
+                    ON the desk"
+                    <button
+                      class="btn-speak"
+                      onclick="speak('The laptop is on the desk')"
+                    >
+                      🔊</button
+                    >. Pégalos en los objetos reales.
+                  </p>
+                </div>
+              </div>
+
+              <div class="method-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                  <h4>Visualización Activa (15 min)</h4>
+                  <p>
+                    Cierra los ojos. Imagina tu habitación. Recórrela mentalmente y di en voz alta dónde está cada objeto que etiquetaste.
+                    <br><em>"The mouse is NEXT TO the keyboard."</em>
+                    <br>Si no recuerdas uno, abre los ojos, míralo y vuelve a empezar.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <button
+              class="btn-action btn-outline"
+              style="width: 100%"
+              onclick="startQuiz('d3')"
+            >
+              ⚡ Test Espacial
+            </button>
+            <div id="quiz-d3" class="quiz-panel"></div>
+          </div>
+        </div>
+
+        <!-- LEVEL UP EXAM WEEK 1 -->
+        <div class="level-up-container" id="level-up-1" style="margin: 2rem 0; padding: 2rem; background: var(--bg-card); border: 2px solid var(--primary-500); border-radius: 16px; text-align: center;">
+            <div class="level-up-content">
+                <h3 style="color: var(--primary-400); margin-bottom: 1rem;">🏆 Desafío de Nivel 1</h3>
+                <p style="margin-bottom: 1.5rem;">Demuestra que dominas los temas de la Semana 1 para desbloquear la siguiente etapa.</p>
+                <button class="btn-action" style="background: var(--primary-600); width: auto; padding: 0.8rem 2rem;" onclick="startLevelUpExam(1)">⚔️ Enfrentar al Jefe Final</button>
+            </div>
+            <div id="exam-panel-1" class="quiz-panel"></div>
+        </div>
+      </div>
+
+      <!-- ================= SEMANA 2 ================= -->
+      <div class="week-section" id="week-2">
+        <div class="week-header">
+          <span class="week-badge">SEMANA 2</span>
+          <div class="week-title">Hackeando el Tiempo (Dec 15 - Dec 21)</div>
+          <button class="btn-exam" onclick="startWeeklyExam(2)">📝 Examen Semana 2</button>
+        </div>
+
+        <div class="ai-prompt-container">
+          <span class="prompt-label">🤖 Prompt Semana 2:</span>
+          <div class="prompt-code" id="p2">
+            "Hi Tutor. We are moving to the Past Tense. FOCUS: Phonological
+            Loops for -ED endings. INSTRUCTIONS: 1. Don't let me pronounce the
+            'E' in 'Work-ed'. Train me to say 'Workt'. 2. Use Spaced Repetition
+            for Irregular verbs. Give me 3 verbs, ask me to use them, then ask
+            me again 5 minutes later. Let's talk about my last weekend."
+          </div>
+          <button class="btn-action" onclick="copyToClipboard('p2')">
+            Copiar Prompt
+          </button>
+        </div>
+
+        <!-- LUNES -->
+        <div class="day-card active-day" id="card-d4">
+          <div class="day-header" onclick="toggleDay('d4')">
+            <div>
+              <span class="day-date">Lunes 15 Dic</span>
+              <span class="day-title"
+                >Fonética: El sonido del Pasado (-ED)</span
+              >
+            </div>
+            <div class="toggle-icon">+</div>
+          </div>
+          <div class="day-body" id="d4">
+            <div id="summary-d4" class="result-box"></div>
+            <div class="pedagogy-box">
+              <div class="pedagogy-title">
+                🧠 Neuro-Ciencia: Bucle Fonológico
+              </div>
+              <p>
+                Tu cerebro hispano quiere leer todas las letras ("Wor-ked"). El
+                sonido final 'T' o 'D' es percusivo.
+              </p>
+            </div>
+            <div class="activity-block">
+              <div class="method-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <h4>Entrenamiento Auditivo (15 min)</h4>
+                  <p>
+                    Agrupa por sonido. No leas la 'E'.
+                    <br>
+                    <strong
+                      >Workt
+                      <button class="btn-speak" onclick="speak('Worked')">🔊</button
+                      >, Playd
+                      <button class="btn-speak" onclick="speak('Played')">🔊</button
+                      >, Wanted
+                      <button class="btn-speak" onclick="speak('Wanted')">
+                        🔊
+                      </button></strong
+                    >.
+                  </p>
+                </div>
+              </div>
+
+              <div class="method-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                  <h4>Memoria Muscular: Exageración (15 min)</h4>
+                  <p>
+                    Pon tu mano en tu garganta.
+                    <br><strong>Sonidos Vibrantes (Voiced):</strong> "Play... ddd". Siente la vibración.
+                    <br><strong>Sonidos Secos (Unvoiced):</strong> "Work... ttt". Es aire explosivo, sin vibración.
+                    <br>Practica 10 verbos alternando: <em>Call-d, Walk-t, Live-d, Stop-t</em>.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button
+              class="btn-action btn-outline"
+              style="width: 100%"
+              onclick="startQuiz('d4')"
+            >
+              ⚡ Test Fonético
+            </button>
+            <div id="quiz-d4" class="quiz-panel"></div>
+          </div>
+        </div>
+
+        <!-- MARTES -->
+        <div class="day-card active-day" id="card-d5">
+          <div class="day-header" onclick="toggleDay('d5')">
+            <div>
+              <span class="day-date">Martes 16 Dic</span>
+              <span class="day-title">Irregulares: Repetición Espaciada</span>
+            </div>
+            <div class="toggle-icon">+</div>
+          </div>
+          <div class="day-body" id="d5">
+            <div id="summary-d5" class="result-box"></div>
+            <div class="pedagogy-box">
+              <div class="pedagogy-title">🧠 Neuro-Ciencia: Chunking (Agrupación)</div>
+              <p>
+                El cerebro no puede memorizar una lista de 100 verbos en orden alfabético. 
+                Pero sí puede recordar <strong>patrones de sonido</strong>. Agruparemos los verbos irregulares por cómo SUENAN, no por cómo se escriben.
+              </p>
+            </div>
+
+            <div class="activity-block">
+              <div class="method-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <h4>Grupo 1: El Patrón "I - A - U" (20 min)</h4>
+                  <p>
+                    Estos verbos cambian la vocal de forma predecible. Repítelos como una canción:
+                  </p>
+                  <ul style="list-style: none; padding-left: 0;">
+                    <li>🎵 <strong>Drink - Drank - Drunk</strong> <button class="btn-speak" onclick="speak('Drink, Drank, Drunk')">🔊</button></li>
+                    <li>🎵 <strong>Sing - Sang - Sung</strong> <button class="btn-speak" onclick="speak('Sing, Sang, Sung')">🔊</button></li>
+                    <li>🎵 <strong>Swim - Swam - Swum</strong> <button class="btn-speak" onclick="speak('Swim, Swam, Swum')">🔊</button></li>
+                    <li>🎵 <strong>Begin - Began - Begun</strong> <button class="btn-speak" onclick="speak('Begin, Began, Begun')">🔊</button></li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="method-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                  <h4>Grupo 2: El Patrón "T" Final (20 min)</h4>
+                  <p>
+                    Verbos que terminan en sonido suave y cambian a "T" percusiva en pasado:
+                  </p>
+                  <ul style="list-style: none; padding-left: 0;">
+                    <li>🔨 <strong>Sleep - Slept - Slept</strong> <button class="btn-speak" onclick="speak('Sleep, Slept, Slept')">🔊</button></li>
+                    <li>🔨 <strong>Keep - Kept - Kept</strong> <button class="btn-speak" onclick="speak('Keep, Kept, Kept')">🔊</button></li>
+                    <li>🔨 <strong>Feel - Felt - Felt</strong> <button class="btn-speak" onclick="speak('Feel, Felt, Felt')">🔊</button></li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="method-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                  <h4>Técnica: Spaced Repetition (Repetición Espaciada)</h4>
+                  <p>
+                    No los estudies más por hoy. Pon una alarma en tu celular para dentro de <strong>3 horas</strong>. 
+                    Cuando suene, intenta recitar estos 7 verbos sin mirar. Si fallas uno, repítelo 5 veces.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <button
+              class="btn-action btn-outline"
+              style="width: 100%"
+              onclick="startQuiz('d5')"
+            >
+              ⚡ Test de Memoria
+            </button>
+            <div id="quiz-d5" class="quiz-panel"></div>
+          </div>
+        </div>
+
+        <!-- DIA 6: MIERCOLES 17 DIC - PRESENT PERFECT -->
+        <div class="day-card active-day" id="card-d6">
+          <div class="day-header" onclick="toggleDay('d6')">
+            <div>
+              <span class="day-date">Miércoles 17 Dic</span>
+              <span class="day-title">Present Perfect: Conexión Pasado-Presente</span>
+            </div>
+            <div class="toggle-icon">+</div>
+          </div>
+          <div class="day-body" id="d6">
+            <div id="summary-d6" class="result-box"></div>
+            <div class="pedagogy-box">
+              <div class="pedagogy-title">🧠 Neuro-Ciencia: Relevancia Temporal</div>
+              <p>
+                El Present Perfect conecta experiencias pasadas con el presente. 
+                Piensa: <code>git log --since="inicio"</code> - lo que HAS HECHO hasta ahora.
+              </p>
+            </div>
+            <div class="activity-block">
+              <div class="method-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <h4>Have/Has + Participio</h4>
+                  <p>
+                    "I <strong>have worked</strong> here for 3 years." 
+                    <button class="btn-speak" onclick="speak('I have worked here for three years.')">🔊</button>
+                  </p>
+                </div>
+              </div>
+              <div class="method-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                  <h4>Experiencias de Vida</h4>
+                  <p>
+                    "Have you <strong>ever</strong> used React?" 
+                    <button class="btn-speak" onclick="speak('Have you ever used React?')">🔊</button>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button class="btn-action btn-outline" style="width: 100%" onclick="startQuiz('d6')">
+              ⚡ Test Present Perfect
+            </button>
+            <div id="quiz-d6" class="quiz-panel"></div>
+          </div>
+        </div>
+
+        <!-- DIA 7: JUEVES 18 DIC - PHRASAL VERBS -->
+        <div class="day-card active-day" id="card-d7">
+          <div class="day-header" onclick="toggleDay('d7')">
+            <div>
+              <span class="day-date">Jueves 18 Dic</span>
+              <span class="day-title">Phrasal Verbs para Programadores</span>
+            </div>
+            <div class="toggle-icon">+</div>
+          </div>
+          <div class="day-body" id="d7">
+            <div id="summary-d7" class="result-box"></div>
+            <div class="pedagogy-box">
+              <div class="pedagogy-title">🧠 Neuro-Ciencia: Asociación Semántica</div>
+              <p>
+                Los phrasal verbs son combinaciones verbo+preposición con significado único.
+                En tech son ESENCIALES: set up, figure out, look into, run into...
+              </p>
+            </div>
+            <div class="activity-block">
+              <div class="method-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <h4>Set up = Configurar</h4>
+                  <p>
+                    "Let me <strong>set up</strong> the environment." 
+                    <button class="btn-speak" onclick="speak('Let me set up the environment.')">🔊</button>
+                  </p>
+                </div>
+              </div>
+              <div class="method-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                  <h4>Figure out = Resolver</h4>
+                  <p>
+                    "I need to <strong>figure out</strong> this bug." 
+                    <button class="btn-speak" onclick="speak('I need to figure out this bug.')">🔊</button>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button class="btn-action btn-outline" style="width: 100%" onclick="startQuiz('d7')">
+              ⚡ Test Phrasal Verbs
+            </button>
+            <div id="quiz-d7" class="quiz-panel"></div>
+          </div>
+        </div>
+
+        <!-- DIA 8: VIERNES 19 DIC - TECH MEETINGS -->
+        <div class="day-card active-day" id="card-d8">
+          <div class="day-header" onclick="toggleDay('d8')">
+            <div>
+              <span class="day-date">Viernes 19 Dic</span>
+              <span class="day-title">Inglés para Reuniones Técnicas</span>
+            </div>
+            <div class="toggle-icon">+</div>
+          </div>
+          <div class="day-body" id="d8">
+            <div id="summary-d8" class="result-box"></div>
+            <div class="pedagogy-box">
+              <div class="pedagogy-title">🧠 Neuro-Ciencia: Contexto Profesional</div>
+              <p>
+                Las reuniones de trabajo tienen frases estándar. 
+                Aprenderlas te dará confianza en standups, demos y retros.
+              </p>
+            </div>
+            <div class="activity-block">
+              <div class="method-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <h4>Iniciar reunión</h4>
+                  <p>
+                    "<strong>Let's get started</strong> with today's agenda." 
+                    <button class="btn-speak" onclick="speak('Lets get started with todays agenda.')">🔊</button>
+                  </p>
+                </div>
+              </div>
+              <div class="method-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                  <h4>Pedir aclaraciones</h4>
+                  <p>
+                    "<strong>Could you elaborate</strong> on that point?" 
+                    <button class="btn-speak" onclick="speak('Could you elaborate on that point?')">🔊</button>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button class="btn-action btn-outline" style="width: 100%" onclick="startQuiz('d8')">
+              ⚡ Test Meetings
+            </button>
+            <div id="quiz-d8" class="quiz-panel"></div>
+          </div>
+        </div>
+
+        <!-- DIA 9: SABADO 20 DIC - COMPARATIVES -->
+        <div class="day-card weekend" id="card-d9">
+          <div class="day-header" onclick="toggleDay('d9')">
+            <div>
+              <span class="day-date">Sábado 20 Dic</span>
+              <span class="day-title">Comparativos y Superlativos</span>
+            </div>
+            <div class="toggle-icon">+</div>
+          </div>
+          <div class="day-body" id="d9">
+            <div id="summary-d9" class="result-box"></div>
+            <div class="pedagogy-box">
+              <div class="pedagogy-title">🧠 Neuro-Ciencia: Comparación Analítica</div>
+              <p>
+                Como programador, comparas constantemente: rendimiento, complejidad, eficiencia.
+                Aprende a expresar esto en inglés.
+              </p>
+            </div>
+            <div class="activity-block">
+              <div class="method-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <h4>Comparativos: -ER / MORE</h4>
+                  <p>
+                    "This algorithm is <strong>faster than</strong> the previous one." 
+                    <button class="btn-speak" onclick="speak('This algorithm is faster than the previous one.')">🔊</button>
+                  </p>
+                </div>
+              </div>
+              <div class="method-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                  <h4>Superlativos: THE -EST / THE MOST</h4>
+                  <p>
+                    "This is <strong>the best</strong> solution." 
+                    <button class="btn-speak" onclick="speak('This is the best solution.')">🔊</button>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button class="btn-action btn-outline" style="width: 100%" onclick="startQuiz('d9')">
+              ⚡ Test Comparativos
+            </button>
+            <div id="quiz-d9" class="quiz-panel"></div>
+          </div>
+        </div>
+
+        <!-- LEVEL UP EXAM WEEK 2 -->
+        <div class="level-up-container" id="level-up-2" style="margin: 2rem 0; padding: 2rem; background: var(--bg-card); border: 2px solid var(--primary-500); border-radius: 16px; text-align: center;">
+            <div class="level-up-content">
+                <h3 style="color: var(--primary-400); margin-bottom: 1rem;">🏆 Desafío de Nivel 2</h3>
+                <p style="margin-bottom: 1.5rem;">Demuestra que dominas los temas de la Semana 1 y 2 para desbloquear la siguiente etapa.</p>
+                <button class="btn-action" style="background: var(--primary-600); width: auto; padding: 0.8rem 2rem;" onclick="startLevelUpExam(2)">⚔️ Enfrentar al Jefe Final</button>
+            </div>
+            <div id="exam-panel-2" class="quiz-panel"></div>
+        </div>
+      </div>
+
+      <!-- ================= SEMANA 3 ================= -->
+      <div class="week-section" id="week-3">
+        <div class="week-header">
+          <span class="week-badge">SEMANA 3</span>
+          <div class="week-title">Construcción de Fluidez (Dec 22 - Dec 28)</div>
+          <button class="btn-exam" onclick="startWeeklyExam(3)">📝 Examen Semana 3</button>
+        </div>
+
+        <div class="ai-prompt-container">
+          <span class="prompt-label">🤖 Prompt Semana 3:</span>
+          <div class="prompt-code" id="p3">
+            "Hi Tutor. WEEK 3 FOCUS: Future Tense & Conditionals. I need to talk about plans and possibilities in tech. INSTRUCTIONS: 1. Teach me 'will' vs 'going to' with coding examples. 2. Practice 'If...then' statements as conditionals. 3. Role-play: I'm explaining my project roadmap to a client. Give me feedback on my future tense usage."
+          </div>
+          <button class="btn-action" onclick="copyToClipboard('p3')">
+            Copiar Prompt
+          </button>
+        </div>
+
+        <!-- DIA 10: LUNES 22 DIC - FUTURO -->
+        <div class="day-card active-day" id="card-d10">
+          <div class="day-header" onclick="toggleDay('d10')">
+            <div>
+              <span class="day-date">Lunes 22 Dic</span>
+              <span class="day-title">Futuro: Will vs Going To</span>
+            </div>
+            <div class="toggle-icon">+</div>
+          </div>
+          <div class="day-body" id="d10">
+            <div id="summary-d10" class="result-box"></div>
+            <div class="pedagogy-box">
+              <div class="pedagogy-title">🧠 Neuro-Ciencia: Diferenciación Contextual</div>
+              <p>
+                Tu cerebro aprende mejor cuando hay <strong>contraste</strong>. "Will" es decisión instantánea. 
+                "Going to" es plan previo. Piensa: <em>commit</em> vs <em>scheduled task</em>.
+              </p>
+            </div>
+            <div class="activity-block">
+              <div class="method-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <h4>Will = Decisión en el momento</h4>
+                  <p>
+                    "The server is down! I <strong>will</strong> restart it now." 
+                    <button class="btn-speak" onclick="speak('The server is down! I will restart it now.')">🔊</button>
+                  </p>
+                </div>
+              </div>
+              <div class="method-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                  <h4>Going to = Plan previo</h4>
+                  <p>
+                    "I'm <strong>going to</strong> deploy the update tomorrow." 
+                    <button class="btn-speak" onclick="speak('I am going to deploy the update tomorrow.')">🔊</button>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button class="btn-action btn-outline" style="width: 100%" onclick="startQuiz('d10')">
+              ⚡ Test de Futuro
+            </button>
+            <div id="quiz-d10" class="quiz-panel"></div>
+          </div>
+        </div>
+
+        <!-- DIA 11: MARTES 23 DIC - CONDICIONALES -->
+        <div class="day-card active-day" id="card-d11">
+          <div class="day-header" onclick="toggleDay('d11')">
+            <div>
+              <span class="day-date">Martes 23 Dic</span>
+              <span class="day-title">Condicionales: If-Then Logic</span>
+            </div>
+            <div class="toggle-icon">+</div>
+          </div>
+          <div class="day-body" id="d11">
+            <div id="summary-d11" class="result-box"></div>
+            <div class="pedagogy-box">
+              <div class="pedagogy-title">🧠 Neuro-Ciencia: Mapeo Lógico</div>
+              <p>
+                Como programador, ya piensas en IF-THEN. Usaremos esa estructura mental. 
+                <code>if (condition) { result }</code> = If + present, will + base verb.
+              </p>
+            </div>
+            <div class="activity-block">
+              <div class="method-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <h4>Primer Condicional (Real/Probable)</h4>
+                  <p>
+                    "If the test <strong>passes</strong>, I <strong>will</strong> merge the code." 
+                    <button class="btn-speak" onclick="speak('If the test passes, I will merge the code.')">🔊</button>
+                  </p>
+                </div>
+              </div>
+              <div class="method-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                  <h4>Segundo Condicional (Hipotético)</h4>
+                  <p>
+                    "If I <strong>had</strong> more time, I <strong>would</strong> refactor." 
+                    <button class="btn-speak" onclick="speak('If I had more time, I would refactor.')">🔊</button>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button class="btn-action btn-outline" style="width: 100%" onclick="startQuiz('d11')">
+              ⚡ Test Condicional
+            </button>
+            <div id="quiz-d11" class="quiz-panel"></div>
+          </div>
+        </div>
+
+        <!-- DIA 12: SABADO 27 DIC - ENTREVISTAS AVANZADAS -->
+        <div class="day-card weekend" id="card-d12">
+          <div class="day-header" onclick="toggleDay('d12')">
+            <div>
+              <span class="day-date">Sábado 27 Dic</span>
+              <span class="day-title">Entrevistas Técnicas Avanzadas</span>
+            </div>
+            <div class="toggle-icon">+</div>
+          </div>
+          <div class="day-body" id="d12">
+            <div id="summary-d12" class="result-box"></div>
+            <div class="pedagogy-box">
+              <div class="pedagogy-title">🧠 Neuro-Ciencia: Simulación de Estrés</div>
+              <p>
+                Practicar bajo presión simulada prepara al cerebro para el escenario real. 
+                Hoy haremos role-play de entrevista técnica.
+              </p>
+            </div>
+            <div class="activity-block">
+              <div class="method-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <h4>El Método STAR (Estructura)</h4>
+                  <p>
+                    Para responder "Tell me about a challenge", usa esta estructura científica:
+                    <br><strong>S</strong>ituation (Contexto)
+                    <br><strong>T</strong>ask (Tu responsabilidad)
+                    <br><strong>A</strong>ction (Qué hiciste - usa verbos de acción)
+                    <br><strong>R</strong>esult (El resultado positivo/datos)
+                  </p>
+                </div>
+              </div>
+
+              <div class="method-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                  <h4>Frases Clave (Fillers Profesionales)</h4>
+                  <p>Usa estas frases mientras piensas tu respuesta:</p>
+                  <ul>
+                    <li>"That's an interesting question..." <button class="btn-speak" onclick="speak('That is an interesting question')">🔊</button></li>
+                    <li>"Let me think about a specific example..." <button class="btn-speak" onclick="speak('Let me think about a specific example')">🔊</button></li>
+                    <li>"In my previous role, I was responsible for..." <button class="btn-speak" onclick="speak('In my previous role, I was responsible for')">🔊</button></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <button class="btn-action btn-outline" style="width: 100%" onclick="startQuiz('d12')">
+              ⚡ Test de Entrevista
+            </button>
+            <div id="quiz-d12" class="quiz-panel"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SEMANA 4 ================= -->
+      <div class="week-section" id="week-4">
+        <div class="week-header">
+          <span class="week-badge">SEMANA 4</span>
+          <div class="week-title">Maestría Comunicativa (Dec 29 - Jan 4)</div>
+          <button class="btn-exam" onclick="startWeeklyExam(4)">📝 Examen Semana 4</button>
+        </div>
+
+        <div class="ai-prompt-container">
+          <span class="prompt-label">🤖 Prompt Semana 4:</span>
+          <div class="prompt-code" id="p4">
+            "Hi Tutor. FINAL WEEK! FOCUS: Professional Communication & Advanced Grammar. INSTRUCTIONS: 1. Practice Future Perfect and Modal Perfects. 2. Help me with professional email writing. 3. Simulate technical presentations. 4. Review all grammar points from the bootcamp. Let's do a comprehensive practice!"
+          </div>
+          <button class="btn-action" onclick="copyToClipboard('p4')">
+            Copiar Prompt
+          </button>
+        </div>
+
+        <!-- DIA 13: LUNES 29 DIC - EMAILS PROFESIONALES -->
+        <div class="day-card active-day" id="card-d13">
+          <div class="day-header" onclick="toggleDay('d13')">
+            <div>
+              <span class="day-date">Lunes 29 Dic</span>
+              <span class="day-title">Emails Profesionales</span>
+            </div>
+            <div class="toggle-icon">+</div>
+          </div>
+          <div class="day-body" id="d13">
+            <div id="summary-d13" class="result-box"></div>
+            <div class="pedagogy-box">
+              <div class="pedagogy-title">🧠 Neuro-Ciencia: Plantillas Mentales</div>
+              <p>
+                Los emails siguen patrones. Al memorizar estructuras, reduces la carga cognitiva y escribes más rápido.
+              </p>
+            </div>
+            <div class="activity-block">
+              <h4>Estructura de Email Profesional:</h4>
+              <div style="background:#f8fafc; padding:15px; border-radius:8px; font-family:monospace; font-size:0.9rem;">
+                Subject: [Action Required] Update on Project X<br><br>
+                Hi [Name],<br><br>
+                I hope this email finds you well.<br><br>
+                I'm writing to [purpose]...<br><br>
+                Please let me know if you have any questions.<br><br>
+                Best regards,<br>
+                [Your name]
+              </div>
+            </div>
+            <button class="btn-action btn-outline" style="width: 100%" onclick="startQuiz('d13')">
+              ⚡ Test de Emails
+            </button>
+            <div id="quiz-d13" class="quiz-panel"></div>
+          </div>
+        </div>
+
+        <!-- DIA 14: MARTES 30 DIC - PRESENTACIONES -->
+        <div class="day-card active-day" id="card-d14">
+          <div class="day-header" onclick="toggleDay('d14')">
+            <div>
+              <span class="day-date">Martes 30 Dic</span>
+              <span class="day-title">Presentaciones Técnicas</span>
+            </div>
+            <div class="toggle-icon">+</div>
+          </div>
+          <div class="day-body" id="d14">
+            <div id="summary-d14" class="result-box"></div>
+            <div class="pedagogy-box">
+              <div class="pedagogy-title">🧠 Neuro-Ciencia: Storytelling Técnico</div>
+              <p>
+                Las presentaciones efectivas siguen una estructura: problema → solución → resultados.
+                Aprende las frases clave para demos y presentaciones.
+              </p>
+            </div>
+            <div class="activity-block">
+              <h4>Frases para Presentaciones:</h4>
+              <ul>
+                <li>"Today I'm going to show you..." <button class="btn-speak" onclick="speak('Today I am going to show you')">🔊</button></li>
+                <li>"As you can see here..." <button class="btn-speak" onclick="speak('As you can see here')">🔊</button></li>
+                <li>"Let me walk you through..." <button class="btn-speak" onclick="speak('Let me walk you through')">🔊</button></li>
+                <li>"Are there any questions?" <button class="btn-speak" onclick="speak('Are there any questions?')">🔊</button></li>
+              </ul>
+            </div>
+            <button class="btn-action btn-outline" style="width: 100%" onclick="startQuiz('d14')">
+              ⚡ Test de Presentaciones
+            </button>
+            <div id="quiz-d14" class="quiz-panel"></div>
+          </div>
+        </div>
+
+        <!-- DIA 15: SABADO 4 ENE - EXAMEN FINAL -->
+        <div class="day-card weekend" id="card-d15">
+          <div class="day-header" onclick="toggleDay('d15')">
+            <div>
+              <span class="day-date">Sábado 4 Ene</span>
+              <span class="day-title">🏆 Evaluación Final del Bootcamp</span>
+            </div>
+            <div class="toggle-icon">+</div>
+          </div>
+          <div class="day-body" id="d15">
+            <div id="summary-d15" class="result-box"></div>
+            <div class="pedagogy-box">
+              <div class="pedagogy-title">🎓 Certificación de Progreso</div>
+              <p>
+                ¡Felicidades por llegar hasta aquí! Este test final evalúa todo lo aprendido: 
+                tiempos verbales, phrasal verbs, vocabulario técnico y comunicación profesional.
+                Necesitas 70%+ para "aprobar" el bootcamp.
+              </p>
+            </div>
+            <div class="activity-block">
+              <h4>Temas del Examen Final:</h4>
+              <ul>
+                <li>Present Simple, Past Simple, Present Perfect</li>
+                <li>Future: Will vs Going to</li>
+                <li>Conditionals y Modal Verbs</li>
+                <li>Phrasal Verbs para Tech</li>
+                <li>Vocabulario de Entrevistas y Emails</li>
+              </ul>
+            </div>
+            <button class="btn-action btn-outline" style="width: 100%" onclick="startQuiz('d15')">
+              🏆 EXAMEN FINAL
+            </button>
+            <div id="quiz-d15" class="quiz-panel"></div>
+          </div>
+        </div>
+      </div>
+
+      </div> <!-- Cierre tab-lessons -->
+
+      <!-- Footer -->
+      <footer>
+        <p>🧠 Neuro-English Bootcamp Pro v5.0 | Designed for Engineers</p>
+        <p style="font-size:0.8rem; margin-top:5px;">Método: Input Comprensible + Shadowing + Active Recall + Spaced Repetition</p>
+        <button class="btn-reset" onclick="resetProgress()">
+          🔄 Reiniciar todo mi progreso
+        </button>
+      </footer>
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>
