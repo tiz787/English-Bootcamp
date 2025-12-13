@@ -1,4 +1,4 @@
-const TOTAL_DAYS = 15;
+const TOTAL_DAYS = 52;
 
 // --- SISTEMA DE INTENTOS Y EXÁMENES ---
 const quizAttempts = {}; // Almacena intentos por día: { d1: { attempts: 2, maxAttempts: 3 } }
@@ -2994,6 +2994,18 @@ function updateStats() {
 
 // --- 3. LÓGICA DE INTERFAZ ---
 function toggleDay(id) {
+  // Check if parent week is locked
+  const dayCard = document.getElementById(`card-${id}`);
+  if (dayCard) {
+    const weekSection = dayCard.closest(".week-section");
+    if (weekSection && weekSection.classList.contains("locked")) {
+      alert(
+        "🔒 Esta semana está bloqueada. Completa la semana anterior o aprueba el examen de validación."
+      );
+      return;
+    }
+  }
+
   const body = document.getElementById(id);
   const icon = body.previousElementSibling.querySelector(".toggle-icon");
 
@@ -3394,7 +3406,7 @@ function startSkipExam(targetWeek) {
 
     if (currentQ >= selectedQuestions.length) {
       const score = Math.round((correctCount / selectedQuestions.length) * 100);
-      const passed = score >= 80;
+      const passed = score >= 70;
 
       skipExamResults[`toWeek${week}`] = { passed, score };
       localStorage.setItem("skipExamResults", JSON.stringify(skipExamResults));
@@ -3412,12 +3424,12 @@ function startSkipExam(targetWeek) {
               <p style="color:var(--text-light);">Los días anteriores quedan marcados como completados.</p>
             `
                 : `
-              <p style="margin-top:15px; color:#991b1b;">Necesitabas 80% para aprobar.</p>
+              <p style="margin-top:15px; color:#991b1b;">Necesitabas 70% para aprobar.</p>
               <p style="color:var(--text-light);">Practica más y vuelve a intentarlo.</p>
             `
             }
             <button class="btn-action" onclick="closeSkipExamModal(); ${
-              passed ? `unlockWeek(${week})` : ""
+              passed ? `checkWeekUnlocks()` : ""
             }" style="margin-top:15px;">
               ${passed ? "🚀 Ir a Semana " + week : "📖 Seguir estudiando"}
             </button>
@@ -4005,6 +4017,115 @@ function startVocabTest() {
   document.body.appendChild(modal);
 }
 
+// --- WEEKLY EXAM LOGIC ---
+window.startWeeklyExam = function (weekNum) {
+  const panel = document.getElementById(`quiz-d${weekNum * 7}`); // Use last day panel or create a new one?
+  // Actually, the button calls startWeeklyExam(weekNum)
+  // We should probably show a modal or use a specific panel.
+  // Let's use a modal for consistency with Skip Exam.
+
+  const questions = weeklyExamQuestions[`week${weekNum}`];
+  if (!questions || questions.length === 0) {
+    alert("Examen no disponible aún.");
+    return;
+  }
+
+  const modal = document.createElement("div");
+  modal.className = "exam-modal";
+  modal.id = `weekly-exam-modal-${weekNum}`;
+
+  let currentQ = 0;
+  let correctCount = 0;
+
+  // Shuffle
+  const shuffled = [...questions].sort(() => 0.5 - Math.random());
+  const selectedQuestions = shuffled.slice(0, 10); // Max 10 questions
+
+  function renderQuestion() {
+    if (currentQ >= selectedQuestions.length) {
+      finishExam();
+      return;
+    }
+
+    const q = selectedQuestions[currentQ];
+    modal.innerHTML = `
+        <div class="exam-container">
+          <div class="exam-header">
+            <h2>📝 Examen Semana ${weekNum}</h2>
+            <span class="exam-progress">Pregunta ${currentQ + 1} de ${
+      selectedQuestions.length
+    }</span>
+          </div>
+          <div class="exam-question">
+            <p class="question-text">${q.q}</p>
+            <div class="exam-options">
+              ${q.options
+                .map(
+                  (opt, idx) => `
+                <button class="exam-option" onclick="selectWeeklyAnswer(${weekNum}, ${idx}, ${q.correct})">${opt}</button>
+              `
+                )
+                .join("")}
+            </div>
+          </div>
+          <button class="btn-action btn-outline" onclick="closeWeeklyExamModal(${weekNum})" style="margin-top:20px;">❌ Cancelar</button>
+        </div>
+      `;
+  }
+
+  window.selectWeeklyAnswer = function (week, selected, correct) {
+    if (selected === correct) correctCount++;
+    currentQ++;
+    renderQuestion();
+  };
+
+  function finishExam() {
+    const score = Math.round((correctCount / selectedQuestions.length) * 100);
+    const passed = score >= 70;
+
+    if (passed) {
+      const savedData =
+        JSON.parse(localStorage.getItem("englishBootcampProgress")) || {};
+      savedData[`level${weekNum}Passed`] = true;
+      localStorage.setItem(
+        "englishBootcampProgress",
+        JSON.stringify(savedData)
+      );
+      checkWeekUnlocks();
+    }
+
+    modal.innerHTML = `
+        <div class="exam-container">
+          <div class="exam-result ${passed ? "passed" : "failed"}">
+            <h2>${
+              passed ? "🎉 ¡Semana Aprobada!" : "📚 Inténtalo de nuevo"
+            }</h2>
+            <p class="score-big">${score}%</p>
+            <p>${correctCount} de ${selectedQuestions.length} correctas</p>
+            <p>${
+              passed
+                ? "Has desbloqueado la siguiente semana."
+                : "Necesitas 70% para aprobar."
+            }</p>
+            <button class="btn-action" onclick="closeWeeklyExamModal(${weekNum})" style="margin-top:15px;">
+              ${passed ? "Continuar" : "Repasar"}
+            </button>
+          </div>
+        </div>
+      `;
+
+    if (passed) addXP(500);
+  }
+
+  window.closeWeeklyExamModal = function (week) {
+    const m = document.getElementById(`weekly-exam-modal-${week}`);
+    if (m) m.remove();
+  };
+
+  renderQuestion();
+  document.body.appendChild(modal);
+};
+
 // --- LEVEL UP EXAM LOGIC ---
 window.startLevelUpExam = function (level) {
   const panel = document.getElementById(`exam-panel-${level}`);
@@ -4131,29 +4252,509 @@ window.submitExam = function (level) {
 function checkWeekUnlocks() {
   const savedData =
     JSON.parse(localStorage.getItem("englishBootcampProgress")) || {};
+  const skipData = JSON.parse(localStorage.getItem("skipExamResults")) || {};
 
-  // Unlock Week 2 if Level 1 Exam is passed
-  const week2 = document.getElementById("week-2");
-  if (week2) {
-    if (savedData.level1Passed) {
-      week2.classList.remove("locked");
-    } else {
-      week2.classList.add("locked");
-    }
-  }
+  // Week 1 is always open
+  // Weeks 2-8
+  for (let i = 2; i <= 8; i++) {
+    const weekElem = document.getElementById(`week-${i}`);
+    if (weekElem) {
+      // Unlock if previous week passed OR skip exam passed
+      const prevWeekPassed = savedData[`level${i - 1}Passed`];
+      const skipPassed =
+        skipData[`toWeek${i}`] && skipData[`toWeek${i}`].passed;
 
-  // Unlock Week 3 if Level 2 Exam is passed
-  const week3 = document.getElementById("week-3");
-  if (week3) {
-    if (savedData.level2Passed) {
-      week3.classList.remove("locked");
-    } else {
-      week3.classList.add("locked");
+      if (prevWeekPassed || skipPassed) {
+        weekElem.classList.remove("locked");
+      } else {
+        weekElem.classList.add("locked");
+      }
     }
   }
 }
 
 // Initialize on load
 document.addEventListener("DOMContentLoaded", () => {
+  checkWeekUnlocks();
+});
+
+// ==========================================
+// EXTENSIÓN DE RUTINA (DEC 12 - FEB 1)
+// ==========================================
+
+const curriculum = [
+  {
+    week: 1,
+    title: "Configuración Neuronal",
+    focus: "Shadowing & Basics",
+    start: new Date(2025, 11, 11),
+  },
+  {
+    week: 2,
+    title: "El Pasado y la Narrativa",
+    focus: "Past Simple & Verbs",
+    start: new Date(2025, 11, 18),
+  },
+  {
+    week: 3,
+    title: "Futuro y Planificación",
+    focus: "Future Tenses",
+    start: new Date(2025, 11, 25),
+  },
+  {
+    week: 4,
+    title: "Comunicación Profesional",
+    focus: "Business & Emails",
+    start: new Date(2026, 0, 1),
+  },
+  {
+    week: 5,
+    title: "Lógica y Condicionales",
+    focus: "Conditionals (If/Else)",
+    start: new Date(2026, 0, 8),
+  },
+  {
+    week: 6,
+    title: "Modales y Politeness",
+    focus: "Modal Verbs",
+    start: new Date(2026, 0, 15),
+  },
+  {
+    week: 7,
+    title: "Fluidez y Storytelling",
+    focus: "Connectors & Flow",
+    start: new Date(2026, 0, 22),
+  },
+  {
+    week: 8,
+    title: "Maestría Técnica",
+    focus: "Advanced Tech Vocab",
+    start: new Date(2026, 0, 29),
+  },
+];
+
+const dailyTopics = [
+  // Week 1
+  { d: 1, title: "El Motor Lógico", topic: "Structure (SVO)" },
+  { d: 2, title: "Preguntas Poderosas", topic: "Do/Does Questions" },
+  { d: 3, title: "Existencia y Entorno", topic: "There is/are" },
+  { d: 4, title: "Sonidos del Pasado", topic: "Pronunciation -ED" },
+  { d: 5, title: "Verbos Irregulares I", topic: "Irregular Verbs" },
+  { d: 6, title: "Rutinas y Hábitos", topic: "Present Simple" },
+  { d: 7, title: "Review Semanal", topic: "Review" },
+  // Week 2
+  { d: 8, title: "Narrando Historias", topic: "Past Simple Affirmative" },
+  { d: 9, title: "Negaciones en Pasado", topic: "Did not (Didn't)" },
+  { d: 10, title: "Preguntas en Pasado", topic: "Did you...?" },
+  { d: 11, title: "Verbos Irregulares II", topic: "Common Irregulars" },
+  { d: 12, title: "El Verbo To Be Pasado", topic: "Was/Were" },
+  { d: 13, title: "Anécdotas Técnicas", topic: "Storytelling" },
+  { d: 14, title: "Review Semanal", topic: "Review" },
+  // Week 3
+  { d: 15, title: "Planes Futuros", topic: "Going to" },
+  { d: 16, title: "Predicciones", topic: "Will" },
+  {
+    d: 17,
+    title: "Horarios y Eventos",
+    topic: "Present Continuous for Future",
+  },
+  { d: 18, title: "Verbos Irregulares III", topic: "More Irregulars" },
+  { d: 19, title: "Metas 2026", topic: "Future Goals" },
+  { d: 20, title: "Tech Roadmap", topic: "Project Planning" },
+  { d: 21, title: "Review Semanal", topic: "Review" },
+  // Week 4
+  { d: 22, title: "Emails Formales", topic: "Email Openers" },
+  { d: 23, title: "Solicitudes", topic: "Making Requests" },
+  { d: 24, title: "Reuniones (Dailies)", topic: "Stand-up Updates" },
+  { d: 25, title: "Verbos de Negocios", topic: "Business Verbs" },
+  { d: 26, title: "Presentaciones", topic: "Intros" },
+  { d: 27, title: "Feedback", topic: "Giving/Receiving Feedback" },
+  { d: 28, title: "Review Semanal", topic: "Review" },
+  // Week 5
+  { d: 29, title: "Causa y Efecto", topic: "Zero Conditional" },
+  { d: 30, title: "Posibilidades Reales", topic: "First Conditional" },
+  { d: 31, title: "Situaciones Hipotéticas", topic: "Second Conditional" },
+  { d: 32, title: "Lógica de Programación", topic: "If/Else in English" },
+  { d: 33, title: "Verbos de Lógica", topic: "Logical Verbs" },
+  { d: 34, title: "Debugging Context", topic: "Explaining Bugs" },
+  { d: 35, title: "Review Semanal", topic: "Review" },
+  // Week 6
+  { d: 36, title: "Habilidades", topic: "Can/Could" },
+  { d: 37, title: "Obligaciones", topic: "Must/Have to" },
+  { d: 38, title: "Consejos", topic: "Should" },
+  { d: 39, title: "Posibilidades", topic: "Might/May" },
+  { d: 40, title: "Soft Skills", topic: "Polite Requests" },
+  { d: 41, title: "Entrevistas Técnicas", topic: "Interview Prep" },
+  { d: 42, title: "Review Semanal", topic: "Review" },
+  // Week 7
+  { d: 43, title: "Conectores I", topic: "And, But, So, Because" },
+  { d: 44, title: "Conectores II", topic: "However, Therefore" },
+  { d: 45, title: "Secuenciadores", topic: "First, Then, Finally" },
+  { d: 46, title: "Narrativa Fluida", topic: "Flow" },
+  { d: 47, title: "Explicando Arquitectura", topic: "System Design" },
+  { d: 48, title: "Debates Técnicos", topic: "Agreeing/Disagreeing" },
+  { d: 49, title: "Review Semanal", topic: "Review" },
+  // Week 8
+  { d: 50, title: "Vocabulario Avanzado", topic: "Advanced Terms" },
+  { d: 51, title: "Preparación Final", topic: "Final Prep" },
+  { d: 52, title: "GRAN FINAL", topic: "Final Exam" },
+];
+
+function renderLessons() {
+  const container = document.getElementById("lessons-container");
+  if (!container) return;
+
+  let html = "";
+
+  curriculum.forEach((week, index) => {
+    const weekNum = index + 1;
+    const startDate = week.start.toLocaleDateString("es-ES", {
+      month: "short",
+      day: "numeric",
+    });
+    const endDate = new Date(week.start);
+    endDate.setDate(endDate.getDate() + 6);
+    const endDateStr = endDate.toLocaleDateString("es-ES", {
+      month: "short",
+      day: "numeric",
+    });
+
+    html += `
+        <div class="week-section" id="week-${weekNum}">
+            <div class="week-header">
+                <span class="week-badge">SEMANA ${weekNum}</span>
+                <div class="week-title">${week.title} (${startDate} - ${endDateStr})</div>
+                <button class="btn-exam" onclick="startWeeklyExam(${weekNum})">📝 Examen Semana ${weekNum}</button>
+            </div>
+            
+            <div class="ai-prompt-container">
+                <span class="prompt-label">🤖 Prompt Semanal:</span>
+                <div class="prompt-code" id="p${weekNum}">
+                    "Act as an English teacher. Week ${weekNum} Focus: ${week.focus}. Help me practice conversation and correct my mistakes."
+                </div>
+                <button class="btn-action" onclick="copyToClipboard('p${weekNum}')">Copiar</button>
+            </div>
+        `;
+
+    // Days for this week
+    const startDay = (weekNum - 1) * 7 + 1;
+    const endDay = Math.min(startDay + 6, 52);
+
+    for (let d = startDay; d <= endDay; d++) {
+      const dayData = dailyTopics.find((t) => t.d === d) || {
+        title: "Práctica General",
+        topic: "General",
+      };
+      const date = new Date(week.start);
+      date.setDate(date.getDate() + (d - startDay));
+      const dateStr = date.toLocaleDateString("es-ES", {
+        weekday: "long",
+        day: "numeric",
+        month: "short",
+      });
+
+      html += `
+            <div class="day-card" id="card-d${d}">
+                <div class="day-header" onclick="toggleDay('d${d}')">
+                    <div>
+                        <span class="day-date">${dateStr}</span>
+                        <span class="day-title">Día ${d}: ${
+        dayData.title
+      }</span>
+                    </div>
+                    <div class="toggle-icon">+</div>
+                </div>
+                <div class="day-body" id="d${d}">
+                    <div id="summary-d${d}" class="result-box"></div>
+                    
+                    <div class="pedagogy-box">
+                        <div class="pedagogy-title">🧠 Clase del Día: ${
+                          dayData.topic
+                        }</div>
+                        <p><strong>Contexto:</strong> ${getContext(
+                          dayData.topic
+                        )}</p>
+                        <p><strong>Cómo responder:</strong> ${getResponse(
+                          dayData.topic
+                        )}</p>
+                        <p><strong>¿Por qué funciona?</strong> ${getWhy(
+                          dayData.topic
+                        )}</p>
+                    </div>
+
+                    <div class="activity-block">
+                        <h4>📚 Vocabulario & Reto</h4>
+                        <p><strong>Reto:</strong> Memorizar 3 verbos irregulares hoy.</p>
+                        <p><strong>Palabra Clave:</strong> ${getKeyword(d)}</p>
+                    </div>
+
+                    <button class="btn-action" onclick="startQuiz('d${d}')">🧠 Iniciar Quiz del Día</button>
+                    <div id="quiz-d${d}" class="quiz-panel"></div>
+                </div>
+            </div>
+            `;
+    }
+    html += `</div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function getContext(topic) {
+  const contexts = {
+    "Structure (SVO)": "Fundamental para construir cualquier oración.",
+    "Do/Does Questions": "Esencial para obtener información en presente.",
+    "Past Simple":
+      "Usado para contar historias o reportar lo que hiciste ayer.",
+    "Future Goals": "Para hablar de tus ambiciones y planes de carrera.",
+    "Email Openers": "La primera impresión en un correo profesional.",
+    Conditionals:
+      "Crucial para explicar lógica de código (If this, then that).",
+    Review: "La repetición espaciada es clave para la memoria a largo plazo.",
+  };
+  return (
+    contexts[topic] || "Concepto clave para la comunicación diaria y técnica."
+  );
+}
+
+function getWhy(topic) {
+  const whys = {
+    "Structure (SVO)":
+      "El inglés es un idioma de orden fijo. Si cambias el orden, cambias el significado.",
+    "Do/Does Questions":
+      "Los auxiliares son las 'banderas' que indican tiempo y modo.",
+    Review: "El cerebro olvida el 50% de lo aprendido en 24h si no se repasa.",
+  };
+  return whys[topic] || "Dominar esto te dará confianza y precisión.";
+}
+
+function getResponse(topic) {
+  const responses = {
+    "Structure (SVO)": "Usa siempre Sujeto + Verbo. Ej: 'I (S) code (V)'.",
+    "Do/Does Questions":
+      "Responde con el auxiliar: 'Yes, I do' / 'No, I don't'.",
+    "Past Simple":
+      "Usa el verbo en pasado (ed o irregular). 'I worked yesterday'.",
+    "Future Goals": "Usa 'I want to...' o 'I plan to...'.",
+    "Email Openers": "Usa 'Dear [Name],' o 'Hi [Name],'.",
+    Conditionals: "Usa 'If [condition], [result]'.",
+  };
+  return (
+    responses[topic] || "Usa la estructura gramatical aprendida en la lección."
+  );
+}
+
+function getKeyword(day) {
+  const words = [
+    "Algorithm",
+    "Bug",
+    "Commit",
+    "Deploy",
+    "Endpoint",
+    "Framework",
+    "Git",
+    "Host",
+    "Interface",
+    "JSON",
+    "Kernel",
+    "Latency",
+    "Merge",
+    "Node",
+    "Object",
+    "Parse",
+    "Query",
+    "React",
+    "Stack",
+    "Token",
+    "User",
+    "Variable",
+    "Widget",
+    "XML",
+    "Yield",
+    "Zip",
+  ];
+  return words[day % words.length] || "Code";
+}
+
+function extendWeeklyExams() {
+  // Generate questions for Weeks 5-8
+  for (let i = 5; i <= 8; i++) {
+    weeklyExamQuestions[`week${i}`] = [
+      {
+        q: `Question 1 for Week ${i}`,
+        options: ["A", "B", "C"],
+        correct: 0,
+        feedback: "Feedback",
+        topic: "Topic",
+      },
+      {
+        q: `Question 2 for Week ${i}`,
+        options: ["A", "B", "C"],
+        correct: 1,
+        feedback: "Feedback",
+        topic: "Topic",
+      },
+      {
+        q: `Question 3 for Week ${i}`,
+        options: ["A", "B", "C"],
+        correct: 2,
+        feedback: "Feedback",
+        topic: "Topic",
+      },
+      {
+        q: `Question 4 for Week ${i}`,
+        options: ["A", "B", "C"],
+        correct: 0,
+        feedback: "Feedback",
+        topic: "Topic",
+      },
+      {
+        q: `Question 5 for Week ${i}`,
+        options: ["A", "B", "C"],
+        correct: 1,
+        feedback: "Feedback",
+        topic: "Topic",
+      },
+    ];
+  }
+
+  // Generate Skip Exam Questions (Cumulative)
+  // toWeek2 = week1
+  // toWeek3 = week1 + week2
+  // ...
+  // toWeek8 = week1 + ... + week7
+
+  for (let i = 2; i <= 8; i++) {
+    let cumulativeQuestions = [];
+    for (let j = 1; j < i; j++) {
+      if (weeklyExamQuestions[`week${j}`]) {
+        cumulativeQuestions = [
+          ...cumulativeQuestions,
+          ...weeklyExamQuestions[`week${j}`],
+        ];
+      }
+    }
+    skipExamQuestions[`toWeek${i}`] = cumulativeQuestions;
+  }
+}
+
+function extendWeeklyExams() {
+  // Generate questions for Weeks 5-8
+  for (let i = 5; i <= 8; i++) {
+    weeklyExamQuestions[`week${i}`] = [
+      {
+        q: `Question 1 for Week ${i}`,
+        options: ["A", "B", "C"],
+        correct: 0,
+        feedback: "Feedback",
+        topic: "Topic",
+      },
+      {
+        q: `Question 2 for Week ${i}`,
+        options: ["A", "B", "C"],
+        correct: 1,
+        feedback: "Feedback",
+        topic: "Topic",
+      },
+      {
+        q: `Question 3 for Week ${i}`,
+        options: ["A", "B", "C"],
+        correct: 2,
+        feedback: "Feedback",
+        topic: "Topic",
+      },
+      {
+        q: `Question 4 for Week ${i}`,
+        options: ["A", "B", "C"],
+        correct: 0,
+        feedback: "Feedback",
+        topic: "Topic",
+      },
+      {
+        q: `Question 5 for Week ${i}`,
+        options: ["A", "B", "C"],
+        correct: 1,
+        feedback: "Feedback",
+        topic: "Topic",
+      },
+    ];
+  }
+
+  // Generate Skip Exam Questions (Cumulative)
+  // toWeek2 = week1
+  // toWeek3 = week1 + week2
+  // ...
+  // toWeek8 = week1 + ... + week7
+
+  for (let i = 2; i <= 8; i++) {
+    let cumulativeQuestions = [];
+    for (let j = 1; j < i; j++) {
+      if (weeklyExamQuestions[`week${j}`]) {
+        cumulativeQuestions = [
+          ...cumulativeQuestions,
+          ...weeklyExamQuestions[`week${j}`],
+        ];
+      }
+    }
+    skipExamQuestions[`toWeek${i}`] = cumulativeQuestions;
+  }
+}
+
+function extendData() {
+  for (let i = 16; i <= 52; i++) {
+    questions[`d${i}`] = [
+      {
+        q: "Question 1 for Day " + i,
+        options: ["A", "B", "C"],
+        correct: 0,
+        feedback: "Feedback",
+        topic: "Topic",
+      },
+      {
+        q: "Question 2 for Day " + i,
+        options: ["A", "B", "C"],
+        correct: 1,
+        feedback: "Feedback",
+        topic: "Topic",
+      },
+      {
+        q: "Question 3 for Day " + i,
+        options: ["A", "B", "C"],
+        correct: 2,
+        feedback: "Feedback",
+        topic: "Topic",
+      },
+    ];
+
+    vocabByDay[`d${i}`] = {
+      programming: [
+        { word: "TechTerm" + i, meaning: "Significado", example: "Example" },
+      ],
+      business: [
+        { word: "BizTerm" + i, meaning: "Significado", example: "Example" },
+      ],
+      phrases: [{ word: "Phrase " + i, meaning: "Frase común" }],
+    };
+
+    flashcardsDataByDay[`d${i}`] = [
+      {
+        word: "Word" + i,
+        pronunciation: "/w/",
+        translation: "Palabra",
+        example: "Example",
+        topic: "General",
+      },
+    ];
+
+    practiceSentencesByDay[`d${i}`] = [
+      { en: "Practice sentence for day " + i, tip: "Tip de pronunciación" },
+    ];
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  extendData();
+  extendWeeklyExams();
+  renderLessons();
   checkWeekUnlocks();
 });
