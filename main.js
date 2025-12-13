@@ -4334,70 +4334,831 @@ const curriculum = [
 ];
 
 const dailyTopics = [
-  // Week 1
-  { d: 1, title: "El Motor Lógico", topic: "Structure (SVO)" },
-  { d: 2, title: "Preguntas Poderosas", topic: "Do/Does Questions" },
-  { d: 3, title: "Existencia y Entorno", topic: "There is/are" },
-  { d: 4, title: "Sonidos del Pasado", topic: "Pronunciation -ED" },
-  { d: 5, title: "Verbos Irregulares I", topic: "Irregular Verbs" },
-  { d: 6, title: "Rutinas y Hábitos", topic: "Present Simple" },
-  { d: 7, title: "Review Semanal", topic: "Review" },
-  // Week 2
-  { d: 8, title: "Narrando Historias", topic: "Past Simple Affirmative" },
-  { d: 9, title: "Negaciones en Pasado", topic: "Did not (Didn't)" },
-  { d: 10, title: "Preguntas en Pasado", topic: "Did you...?" },
-  { d: 11, title: "Verbos Irregulares II", topic: "Common Irregulars" },
-  { d: 12, title: "El Verbo To Be Pasado", topic: "Was/Were" },
-  { d: 13, title: "Anécdotas Técnicas", topic: "Storytelling" },
-  { d: 14, title: "Review Semanal", topic: "Review" },
-  // Week 3
-  { d: 15, title: "Planes Futuros", topic: "Going to" },
-  { d: 16, title: "Predicciones", topic: "Will" },
+  {
+    d: 1,
+    title: "El Motor Lógico",
+    topic: "Structure (SVO)",
+    context: "Fundamental para construir cualquier oración.",
+    response: "Usa siempre Sujeto + Verbo. Ej: 'I (S) code (V)'.",
+    why: "El inglés es un idioma de orden fijo. Si cambias el orden, cambias el significado.",
+    description:
+      "Aprenderás que en inglés el orden es sagrado: Sujeto, Verbo, Objeto. A diferencia del español, no podemos omitir el sujeto.",
+    material:
+      "<a href='https://www.youtube.com/watch?v=8_WzI2jGjXU' target='_blank'>Video: Word Order in English</a>",
+    block1h:
+      "20 min: Video. 40 min: Escribe 20 oraciones simples describiendo tu rutina de trabajo (I open VS Code, I check emails).",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 2,
+    title: "Preguntas Poderosas",
+    topic: "Do/Does Questions",
+    context: "Esencial para obtener información en presente.",
+    response: "Responde con el auxiliar: 'Yes, I do' / 'No, I don't'.",
+    why: "Los auxiliares son las 'banderas' que indican tiempo y modo.",
+    description:
+      "Dominarás cómo hacer preguntas de Sí/No en presente simple usando los auxiliares Do y Does.",
+    material:
+      "<a href='https://www.youtube.com/watch?v=007Q8J8M4lo' target='_blank'>Video: Do vs Does</a>",
+    block1h:
+      "20 min: Video. 40 min: Transforma tus 20 oraciones de ayer en preguntas.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 3,
+    title: "Existencia y Entorno",
+    topic: "There is/are",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'There is/are'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+There+is/are' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 4,
+    title: "Sonidos del Pasado",
+    topic: "Pronunciation -ED",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Pronunciation -ED'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Pronunciation+-ED' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 5,
+    title: "Verbos Irregulares I",
+    topic: "Irregular Verbs",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Irregular Verbs'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Irregular+Verbs' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 6,
+    title: "Rutinas y Hábitos",
+    topic: "Present Simple",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Present Simple'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Present+Simple' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 7,
+    title: "Review Semanal",
+    topic: "Review",
+    context: "La repetición espaciada es clave para la memoria a largo plazo.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "El cerebro olvida el 50% de lo aprendido en 24h si no se repasa.",
+    description:
+      "Día de consolidación. Repasaremos todo lo visto en la semana para asegurar que se quede en la memoria a largo plazo.",
+    material: "Revisar tus notas de la semana.",
+    block1h:
+      "Revisar apuntes y errores de la semana. Hacer un resumen oral de 5 minutos.",
+    block45m:
+      "Hacer el examen semanal o ejercicios de los temas más difíciles.",
+  },
+  {
+    d: 8,
+    title: "Narrando Historias",
+    topic: "Past Simple Affirmative",
+    context: "Usado para contar historias o reportar lo que hiciste ayer.",
+    response: "Usa el verbo en pasado (ed o irregular). 'I worked yesterday'.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "Nos enfocamos en el pasado. Crucial para los 'Daily Stand-ups' donde reportas qué hiciste ayer.",
+    material:
+      "<a href='https://www.youtube.com/watch?v=0Wrv_ZviMEc' target='_blank'>Video: Past Simple Tense</a>",
+    block1h:
+      "30 min: Video sobre verbos regulares/irregulares. 30 min: Escribe un párrafo sobre tu último proyecto finalizado.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 9,
+    title: "Negaciones en Pasado",
+    topic: "Did not (Didn't)",
+    context: "Usado para contar historias o reportar lo que hiciste ayer.",
+    response: "Usa el verbo en pasado (ed o irregular). 'I worked yesterday'.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "Nos enfocamos en el pasado. Crucial para los 'Daily Stand-ups' donde reportas qué hiciste ayer.",
+    material:
+      "<a href='https://www.youtube.com/watch?v=0Wrv_ZviMEc' target='_blank'>Video: Past Simple Tense</a>",
+    block1h:
+      "30 min: Video sobre verbos regulares/irregulares. 30 min: Escribe un párrafo sobre tu último proyecto finalizado.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 10,
+    title: "Preguntas en Pasado",
+    topic: "Did you...?",
+    context: "Usado para contar historias o reportar lo que hiciste ayer.",
+    response: "Usa el verbo en pasado (ed o irregular). 'I worked yesterday'.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "Nos enfocamos en el pasado. Crucial para los 'Daily Stand-ups' donde reportas qué hiciste ayer.",
+    material:
+      "<a href='https://www.youtube.com/watch?v=0Wrv_ZviMEc' target='_blank'>Video: Past Simple Tense</a>",
+    block1h:
+      "30 min: Video sobre verbos regulares/irregulares. 30 min: Escribe un párrafo sobre tu último proyecto finalizado.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 11,
+    title: "Verbos Irregulares II",
+    topic: "Common Irregulars",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Common Irregulars'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Common+Irregulars' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 12,
+    title: "El Verbo To Be Pasado",
+    topic: "Was/Were",
+    context: "Usado para contar historias o reportar lo que hiciste ayer.",
+    response: "Usa el verbo en pasado (ed o irregular). 'I worked yesterday'.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "Nos enfocamos en el pasado. Crucial para los 'Daily Stand-ups' donde reportas qué hiciste ayer.",
+    material:
+      "<a href='https://www.youtube.com/watch?v=0Wrv_ZviMEc' target='_blank'>Video: Past Simple Tense</a>",
+    block1h:
+      "30 min: Video sobre verbos regulares/irregulares. 30 min: Escribe un párrafo sobre tu último proyecto finalizado.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 13,
+    title: "Anécdotas Técnicas",
+    topic: "Storytelling",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Storytelling'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Storytelling' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 14,
+    title: "Review Semanal",
+    topic: "Review",
+    context: "La repetición espaciada es clave para la memoria a largo plazo.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "El cerebro olvida el 50% de lo aprendido en 24h si no se repasa.",
+    description:
+      "Día de consolidación. Repasaremos todo lo visto en la semana para asegurar que se quede en la memoria a largo plazo.",
+    material: "Revisar tus notas de la semana.",
+    block1h:
+      "Revisar apuntes y errores de la semana. Hacer un resumen oral de 5 minutos.",
+    block45m:
+      "Hacer el examen semanal o ejercicios de los temas más difíciles.",
+  },
+  {
+    d: 15,
+    title: "Planes Futuros",
+    topic: "Going to",
+    context: "Para hablar de tus ambiciones y planes de carrera.",
+    response: "Usa 'I want to...' o 'I plan to...' o 'I will...'.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "Aprenderemos a hablar del futuro. Importante para planificar sprints y roadmaps.",
+    material:
+      "<a href='https://www.youtube.com/watch?v=Gw793c_lKk8' target='_blank'>Video: Future Forms</a>",
+    block1h:
+      "30 min: Video. 30 min: Escribe tus planes para el próximo mes y año.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 16,
+    title: "Predicciones",
+    topic: "Will",
+    context: "Para hablar de tus ambiciones y planes de carrera.",
+    response: "Usa 'I want to...' o 'I plan to...' o 'I will...'.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "Aprenderemos a hablar del futuro. Importante para planificar sprints y roadmaps.",
+    material:
+      "<a href='https://www.youtube.com/watch?v=Gw793c_lKk8' target='_blank'>Video: Future Forms</a>",
+    block1h:
+      "30 min: Video. 30 min: Escribe tus planes para el próximo mes y año.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
   {
     d: 17,
     title: "Horarios y Eventos",
     topic: "Present Continuous for Future",
+    context: "Para hablar de tus ambiciones y planes de carrera.",
+    response: "Usa 'I want to...' o 'I plan to...' o 'I will...'.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "Aprenderemos a hablar del futuro. Importante para planificar sprints y roadmaps.",
+    material:
+      "<a href='https://www.youtube.com/watch?v=Gw793c_lKk8' target='_blank'>Video: Future Forms</a>",
+    block1h:
+      "30 min: Video. 30 min: Escribe tus planes para el próximo mes y año.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
   },
-  { d: 18, title: "Verbos Irregulares III", topic: "More Irregulars" },
-  { d: 19, title: "Metas 2026", topic: "Future Goals" },
-  { d: 20, title: "Tech Roadmap", topic: "Project Planning" },
-  { d: 21, title: "Review Semanal", topic: "Review" },
-  // Week 4
-  { d: 22, title: "Emails Formales", topic: "Email Openers" },
-  { d: 23, title: "Solicitudes", topic: "Making Requests" },
-  { d: 24, title: "Reuniones (Dailies)", topic: "Stand-up Updates" },
-  { d: 25, title: "Verbos de Negocios", topic: "Business Verbs" },
-  { d: 26, title: "Presentaciones", topic: "Intros" },
-  { d: 27, title: "Feedback", topic: "Giving/Receiving Feedback" },
-  { d: 28, title: "Review Semanal", topic: "Review" },
-  // Week 5
-  { d: 29, title: "Causa y Efecto", topic: "Zero Conditional" },
-  { d: 30, title: "Posibilidades Reales", topic: "First Conditional" },
-  { d: 31, title: "Situaciones Hipotéticas", topic: "Second Conditional" },
-  { d: 32, title: "Lógica de Programación", topic: "If/Else in English" },
-  { d: 33, title: "Verbos de Lógica", topic: "Logical Verbs" },
-  { d: 34, title: "Debugging Context", topic: "Explaining Bugs" },
-  { d: 35, title: "Review Semanal", topic: "Review" },
-  // Week 6
-  { d: 36, title: "Habilidades", topic: "Can/Could" },
-  { d: 37, title: "Obligaciones", topic: "Must/Have to" },
-  { d: 38, title: "Consejos", topic: "Should" },
-  { d: 39, title: "Posibilidades", topic: "Might/May" },
-  { d: 40, title: "Soft Skills", topic: "Polite Requests" },
-  { d: 41, title: "Entrevistas Técnicas", topic: "Interview Prep" },
-  { d: 42, title: "Review Semanal", topic: "Review" },
-  // Week 7
-  { d: 43, title: "Conectores I", topic: "And, But, So, Because" },
-  { d: 44, title: "Conectores II", topic: "However, Therefore" },
-  { d: 45, title: "Secuenciadores", topic: "First, Then, Finally" },
-  { d: 46, title: "Narrativa Fluida", topic: "Flow" },
-  { d: 47, title: "Explicando Arquitectura", topic: "System Design" },
-  { d: 48, title: "Debates Técnicos", topic: "Agreeing/Disagreeing" },
-  { d: 49, title: "Review Semanal", topic: "Review" },
-  // Week 8
-  { d: 50, title: "Vocabulario Avanzado", topic: "Advanced Terms" },
-  { d: 51, title: "Preparación Final", topic: "Final Prep" },
-  { d: 52, title: "GRAN FINAL", topic: "Final Exam" },
+  {
+    d: 18,
+    title: "Verbos Irregulares III",
+    topic: "More Irregulars",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'More Irregulars'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+More+Irregulars' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 19,
+    title: "Metas 2026",
+    topic: "Future Goals",
+    context: "Para hablar de tus ambiciones y planes de carrera.",
+    response: "Usa 'I want to...' o 'I plan to...' o 'I will...'.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "Aprenderemos a hablar del futuro. Importante para planificar sprints y roadmaps.",
+    material:
+      "<a href='https://www.youtube.com/watch?v=Gw793c_lKk8' target='_blank'>Video: Future Forms</a>",
+    block1h:
+      "30 min: Video. 30 min: Escribe tus planes para el próximo mes y año.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 20,
+    title: "Tech Roadmap",
+    topic: "Project Planning",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Project Planning'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Project+Planning' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 21,
+    title: "Review Semanal",
+    topic: "Review",
+    context: "La repetición espaciada es clave para la memoria a largo plazo.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "El cerebro olvida el 50% de lo aprendido en 24h si no se repasa.",
+    description:
+      "Día de consolidación. Repasaremos todo lo visto en la semana para asegurar que se quede en la memoria a largo plazo.",
+    material: "Revisar tus notas de la semana.",
+    block1h:
+      "Revisar apuntes y errores de la semana. Hacer un resumen oral de 5 minutos.",
+    block45m:
+      "Hacer el examen semanal o ejercicios de los temas más difíciles.",
+  },
+  {
+    d: 22,
+    title: "Emails Formales",
+    topic: "Email Openers",
+    context: "La primera impresión en un correo profesional.",
+    response: "Usa 'Dear [Name],' o 'Hi [Name],'.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "Escribir emails claros y profesionales es una habilidad blanda esencial.",
+    material:
+      "<a href='https://www.youtube.com/watch?v=C8QJ0gM5_Ik' target='_blank'>Video: Business Emails</a>",
+    block1h:
+      "20 min: Video. 40 min: Redacta 3 emails simulados (solicitud de vacaciones, reporte de bug, actualización de proyecto).",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 23,
+    title: "Solicitudes",
+    topic: "Making Requests",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Making Requests'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Making+Requests' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 24,
+    title: "Reuniones (Dailies)",
+    topic: "Stand-up Updates",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Stand-up Updates'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Stand-up+Updates' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 25,
+    title: "Verbos de Negocios",
+    topic: "Business Verbs",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Business Verbs'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Business+Verbs' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 26,
+    title: "Presentaciones",
+    topic: "Intros",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Intros'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Intros' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 27,
+    title: "Feedback",
+    topic: "Giving/Receiving Feedback",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Giving/Receiving Feedback'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Giving/Receiving+Feedback' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 28,
+    title: "Review Semanal",
+    topic: "Review",
+    context: "La repetición espaciada es clave para la memoria a largo plazo.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "El cerebro olvida el 50% de lo aprendido en 24h si no se repasa.",
+    description:
+      "Día de consolidación. Repasaremos todo lo visto en la semana para asegurar que se quede en la memoria a largo plazo.",
+    material: "Revisar tus notas de la semana.",
+    block1h:
+      "Revisar apuntes y errores de la semana. Hacer un resumen oral de 5 minutos.",
+    block45m:
+      "Hacer el examen semanal o ejercicios de los temas más difíciles.",
+  },
+  {
+    d: 29,
+    title: "Causa y Efecto",
+    topic: "Zero Conditional",
+    context: "Crucial para explicar lógica de código (If this, then that).",
+    response: "Usa 'If [condition], [result]'.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "Las oraciones condicionales son como los 'if statements' en programación. Causa y efecto.",
+    material:
+      "<a href='https://www.youtube.com/watch?v=h3S48rY_h_8' target='_blank'>Video: Conditionals</a>",
+    block1h:
+      "30 min: Video. 30 min: Explica la lógica de una función simple de tu código usando 'If... then...'.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 30,
+    title: "Posibilidades Reales",
+    topic: "First Conditional",
+    context: "Crucial para explicar lógica de código (If this, then that).",
+    response: "Usa 'If [condition], [result]'.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "Las oraciones condicionales son como los 'if statements' en programación. Causa y efecto.",
+    material:
+      "<a href='https://www.youtube.com/watch?v=h3S48rY_h_8' target='_blank'>Video: Conditionals</a>",
+    block1h:
+      "30 min: Video. 30 min: Explica la lógica de una función simple de tu código usando 'If... then...'.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 31,
+    title: "Situaciones Hipotéticas",
+    topic: "Second Conditional",
+    context: "Crucial para explicar lógica de código (If this, then that).",
+    response: "Usa 'If [condition], [result]'.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "Las oraciones condicionales son como los 'if statements' en programación. Causa y efecto.",
+    material:
+      "<a href='https://www.youtube.com/watch?v=h3S48rY_h_8' target='_blank'>Video: Conditionals</a>",
+    block1h:
+      "30 min: Video. 30 min: Explica la lógica de una función simple de tu código usando 'If... then...'.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 32,
+    title: "Lógica de Programación",
+    topic: "If/Else in English",
+    context: "Crucial para explicar lógica de código (If this, then that).",
+    response: "Usa 'If [condition], [result]'.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "Las oraciones condicionales son como los 'if statements' en programación. Causa y efecto.",
+    material:
+      "<a href='https://www.youtube.com/watch?v=h3S48rY_h_8' target='_blank'>Video: Conditionals</a>",
+    block1h:
+      "30 min: Video. 30 min: Explica la lógica de una función simple de tu código usando 'If... then...'.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 33,
+    title: "Verbos de Lógica",
+    topic: "Logical Verbs",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Logical Verbs'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Logical+Verbs' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 34,
+    title: "Debugging Context",
+    topic: "Explaining Bugs",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Explaining Bugs'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Explaining+Bugs' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 35,
+    title: "Review Semanal",
+    topic: "Review",
+    context: "La repetición espaciada es clave para la memoria a largo plazo.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "El cerebro olvida el 50% de lo aprendido en 24h si no se repasa.",
+    description:
+      "Día de consolidación. Repasaremos todo lo visto en la semana para asegurar que se quede en la memoria a largo plazo.",
+    material: "Revisar tus notas de la semana.",
+    block1h:
+      "Revisar apuntes y errores de la semana. Hacer un resumen oral de 5 minutos.",
+    block45m:
+      "Hacer el examen semanal o ejercicios de los temas más difíciles.",
+  },
+  {
+    d: 36,
+    title: "Habilidades",
+    topic: "Can/Could",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Can/Could'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Can/Could' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 37,
+    title: "Obligaciones",
+    topic: "Must/Have to",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Must/Have to'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Must/Have+to' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 38,
+    title: "Consejos",
+    topic: "Should",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Should'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Should' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 39,
+    title: "Posibilidades",
+    topic: "Might/May",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Might/May'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Might/May' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 40,
+    title: "Soft Skills",
+    topic: "Polite Requests",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Polite Requests'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Polite+Requests' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 41,
+    title: "Entrevistas Técnicas",
+    topic: "Interview Prep",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Interview Prep'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Interview+Prep' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 42,
+    title: "Review Semanal",
+    topic: "Review",
+    context: "La repetición espaciada es clave para la memoria a largo plazo.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "El cerebro olvida el 50% de lo aprendido en 24h si no se repasa.",
+    description:
+      "Día de consolidación. Repasaremos todo lo visto en la semana para asegurar que se quede en la memoria a largo plazo.",
+    material: "Revisar tus notas de la semana.",
+    block1h:
+      "Revisar apuntes y errores de la semana. Hacer un resumen oral de 5 minutos.",
+    block45m:
+      "Hacer el examen semanal o ejercicios de los temas más difíciles.",
+  },
+  {
+    d: 43,
+    title: "Conectores I",
+    topic: "And, But, So, Because",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'And, But, So, Because'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+And,+But,+So,+Because' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 44,
+    title: "Conectores II",
+    topic: "However, Therefore",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'However, Therefore'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+However,+Therefore' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 45,
+    title: "Secuenciadores",
+    topic: "First, Then, Finally",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'First, Then, Finally'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+First,+Then,+Finally' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 46,
+    title: "Narrativa Fluida",
+    topic: "Flow",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Flow'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Flow' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 47,
+    title: "Explicando Arquitectura",
+    topic: "System Design",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'System Design'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+System+Design' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 48,
+    title: "Debates Técnicos",
+    topic: "Agreeing/Disagreeing",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Agreeing/Disagreeing'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Agreeing/Disagreeing' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 49,
+    title: "Review Semanal",
+    topic: "Review",
+    context: "La repetición espaciada es clave para la memoria a largo plazo.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "El cerebro olvida el 50% de lo aprendido en 24h si no se repasa.",
+    description:
+      "Día de consolidación. Repasaremos todo lo visto en la semana para asegurar que se quede en la memoria a largo plazo.",
+    material: "Revisar tus notas de la semana.",
+    block1h:
+      "Revisar apuntes y errores de la semana. Hacer un resumen oral de 5 minutos.",
+    block45m:
+      "Hacer el examen semanal o ejercicios de los temas más difíciles.",
+  },
+  {
+    d: 50,
+    title: "Vocabulario Avanzado",
+    topic: "Advanced Terms",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Advanced Terms'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Advanced+Terms' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 51,
+    title: "Preparación Final",
+    topic: "Final Prep",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Final Prep'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Final+Prep' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
+  {
+    d: 52,
+    title: "GRAN FINAL",
+    topic: "Final Exam",
+    context: "Concepto clave para la comunicación diaria y técnica.",
+    response: "Usa la estructura gramatical aprendida en la lección.",
+    why: "Dominar esto te dará confianza y precisión.",
+    description:
+      "En esta lección profundizaremos en 'Final Exam'. Es fundamental para tu desarrollo profesional.",
+    material:
+      "<a href='https://www.youtube.com/results?search_query=english+grammar+Final+Exam' target='_blank'>Ver videos recomendados</a>",
+    block1h:
+      "30 min: Ver video y tomar notas. 30 min: Escribir 10 ejemplos propios relacionados con tu trabajo.",
+    block45m:
+      "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
+  },
 ];
 
 function renderLessons() {
@@ -4471,15 +5232,34 @@ function renderLessons() {
                         <div class="pedagogy-title">🧠 Clase del Día: ${
                           dayData.topic
                         }</div>
-                        <p><strong>Contexto:</strong> ${getContext(
-                          dayData.topic
-                        )}</p>
-                        <p><strong>Cómo responder:</strong> ${getResponse(
-                          dayData.topic
-                        )}</p>
-                        <p><strong>¿Por qué funciona?</strong> ${getWhy(
-                          dayData.topic
-                        )}</p>
+                        <p><strong>Contexto:</strong> ${
+                          dayData.context || getContext(dayData.topic)
+                        }</p>
+                        <p><strong>Cómo responder:</strong> ${
+                          dayData.response || getResponse(dayData.topic)
+                        }</p>
+                        <p><strong>¿Por qué funciona?</strong> ${
+                          dayData.why || getWhy(dayData.topic)
+                        }</p>
+
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+                            <p><strong>📘 Descripción:</strong> ${
+                              dayData.description || ""
+                            }</p>
+                            <p><strong>📺 Material de Estudio:</strong> ${
+                              dayData.material || ""
+                            }</p>
+                            
+                            <div style="background: var(--bg-elevated); padding: 10px; border-radius: 6px; margin-top: 10px;">
+                                <h5 style="margin: 0 0 10px 0;">⏱️ Plan de Estudio</h5>
+                                <p style="margin-bottom: 5px;"><strong>Bloque 1h:</strong> ${
+                                  dayData.block1h || ""
+                                }</p>
+                                <p style="margin-bottom: 0;"><strong>Extra 45m:</strong> ${
+                                  dayData.block45m || ""
+                                }</p>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="activity-block">
