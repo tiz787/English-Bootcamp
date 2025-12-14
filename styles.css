@@ -227,6 +227,7 @@ body::before {
 
 .toolbar-content {
   max-width: 1400px;
+  max-height: 8rem;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -2878,11 +2879,148 @@ select option {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ===================
+   MEDIA QUERIES (RESPONSIVE)
+   =================== */
+
+@media (max-width: 1024px) {
+  :root {
+    --space-8: 1.5rem;
+    --space-12: 2rem;
+  }
+
+  .container {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .toolbar-content {
+    gap: var(--space-4);
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --text-4xl: 1.75rem;
+    --text-3xl: 1.5rem;
+    --text-2xl: 1.25rem;
+    --text-xl: 1.125rem;
+    --text-lg: 1rem;
+    --space-6: 1rem;
+    --space-5: 0.875rem;
+    --space-4: 0.75rem;
+  }
+
+  .toolbar {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .toolbar-content {
+    flex-direction: column;
+    align-items: stretch;
+    max-height: none;
+    gap: var(--space-3);
+  }
+
+  .toolbar h1 {
+    justify-content: center;
+    font-size: var(--text-xl);
+  }
+
+  .stats-grid {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .stat-item {
+    flex: 1;
+    justify-content: center;
+    min-width: 120px;
+  }
+
+  .pomodoro-widget {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .days-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vocabulary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-overlay {
+    padding: 0;
+    align-items: flex-end; /* Sheet-like on mobile */
+  }
+
+  .quiz-panel,
+  .day-detail-panel {
+    border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+    max-height: 85vh;
+    height: 85vh;
+  }
+
+  .panel-header {
+    padding: var(--space-4);
+  }
+
+  .panel-body {
+    padding: var(--space-4);
+  }
+
+  .exam-container {
+    padding: var(--space-4);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .timer-display {
+    font-size: 4rem;
+  }
+
+  .timer-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .timer-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .nav-tabs {
+    padding: var(--space-2);
+  }
+
+  .nav-tab {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-xs);
+  }
+
+  .flashcard {
+    height: 250px;
+  }
 }

@@ -15,8 +15,102 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="pomodoro.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
+    <!-- Pomodoro Modal -->
+    <div class="pomodoro-modal-overlay" id="pomodoro-modal">
+      <div class="pomodoro-container">
+        <div class="pomodoro-header">
+          <h2 style="margin: 0">🍅 Pomodoro Focus</h2>
+          <div style="display: flex; gap: 15px">
+            <button
+              class="pomodoro-close"
+              id="pomo-fullscreen"
+              title="Pantalla Completa"
+            >
+              ⛶
+            </button>
+            <button class="pomodoro-close" id="pomo-close" title="Cerrar">
+              ✕
+            </button>
+          </div>
+        </div>
+
+        <div class="timer-modes">
+          <button class="mode-btn active" data-mode="pomodoro">Pomodoro</button>
+          <button class="mode-btn" data-mode="short">Short Break</button>
+          <button class="mode-btn" data-mode="long">Long Break</button>
+          <button class="mode-btn" data-mode="custom">Custom</button>
+        </div>
+
+        <div class="timer-display" id="pomo-display">25:00</div>
+
+        <div class="timer-controls">
+          <button class="timer-btn primary" id="pomo-start">
+            <span>▶️</span> Iniciar
+          </button>
+          <button
+            class="timer-btn primary"
+            id="pomo-pause"
+            style="display: none"
+          >
+            <span>⏸️</span> Pausar
+          </button>
+          <button class="timer-btn" id="pomo-reset">
+            <span>🔄</span> Reiniciar
+          </button>
+        </div>
+
+        <div class="timer-settings">
+          <div class="setting-group">
+            <label>Pomodoro (min)</label>
+            <input
+              type="number"
+              id="setting-pomodoro"
+              value="25"
+              class="setting-input"
+            />
+          </div>
+          <div class="setting-group">
+            <label>Short Break (min)</label>
+            <input
+              type="number"
+              id="setting-short"
+              value="5"
+              class="setting-input"
+            />
+          </div>
+          <div class="setting-group">
+            <label>Long Break (min)</label>
+            <input
+              type="number"
+              id="setting-long"
+              value="15"
+              class="setting-input"
+            />
+          </div>
+        </div>
+
+        <div class="pomodoro-analytics">
+          <div class="analytics-header">
+            <h3>📊 Estadísticas de Enfoque</h3>
+            <div class="filter-group">
+              <button class="filter-btn" data-filter="day">Día</button>
+              <button class="filter-btn active" data-filter="week">
+                Semana
+              </button>
+              <button class="filter-btn" data-filter="month">Mes</button>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="pomodoroChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Barra de Herramientas Fija -->
     <div class="toolbar">
       <div class="toolbar-content">
@@ -56,21 +150,11 @@
         <div class="pomodoro-widget">
           <span id="pomodoroTime" class="pomodoro-time">25:00</span>
           <button
-            class="pomodoro-btn"
-            onclick="startPomodoro()"
-            title="Iniciar"
+            class="toolbar-pomodoro-btn"
+            onclick="openPomodoroModal()"
+            title="Abrir Pomodoro"
           >
-            ▶️
-          </button>
-          <button class="pomodoro-btn" onclick="pausePomodoro()" title="Pausar">
-            ⏸️
-          </button>
-          <button
-            class="pomodoro-btn"
-            onclick="resetPomodoro()"
-            title="Reiniciar"
-          >
-            🔄
+            🍅 Pomodoro
           </button>
         </div>
 
@@ -417,3 +501,5 @@
     <script src="main.js"></script>
   </body>
 </html>
+<script src="pomodoro.js"></script>
+<script src="study-plan-renderer.js"></script>
