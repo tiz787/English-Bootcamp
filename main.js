@@ -2922,18 +2922,39 @@ function addXP(amount) {
 function saveDayProgress(dayId, score, topicsToImprove) {
   const currentData =
     JSON.parse(localStorage.getItem("englishBootcampProgress")) || {};
+  const dateStr = new Date().toLocaleDateString();
+
   currentData[dayId] = {
     completed: true,
     score: score,
     topics: topicsToImprove,
-    date: new Date().toLocaleDateString(),
+    date: dateStr,
   };
   localStorage.setItem("englishBootcampProgress", JSON.stringify(currentData));
+
+  // --- NEW: Activity Log for Dashboard ---
+  const activityLog =
+    JSON.parse(localStorage.getItem("englishActivityLog")) || [];
+  activityLog.push({
+    date: new Date().toISOString(), // ISO format for easier parsing
+    dayId: dayId,
+    score: score,
+  });
+  localStorage.setItem("englishActivityLog", JSON.stringify(activityLog));
+  // ---------------------------------------
+
   markDayAsCompleted(dayId, currentData[dayId]);
   updateGlobalProgress();
   updateStreak();
   addXP(score >= 80 ? 100 : 50);
-  updateStats();
+
+  // Update Dashboard if available
+  if (typeof Dashboard !== "undefined") {
+    Dashboard.updateStats();
+    Dashboard.initCharts(); // Refresh charts
+  } else {
+    updateStats();
+  }
 }
 
 function markDayAsCompleted(dayId, data) {
@@ -4347,6 +4368,10 @@ const dailyTopics = [
       "<a href='https://www.youtube.com/watch?v=8_WzI2jGjXU' target='_blank'>Video: Word Order in English</a>",
     block1h:
       "20 min: Video. 40 min: Escribe 20 oraciones simples describiendo tu rutina de trabajo (I open VS Code, I check emails).",
+    exercise: {
+      type: "drag-drop",
+      data: "I write clean code every day",
+    },
     block45m:
       "Practicar pronunciación (Shadowing) o hacer ejercicios de gramática online.",
   },
@@ -5537,4 +5562,21 @@ document.addEventListener("DOMContentLoaded", () => {
   extendWeeklyExams();
   renderLessons();
   checkWeekUnlocks();
+
+  // Initialize Dashboard
+  if (typeof Dashboard !== "undefined") {
+    Dashboard.init();
+  }
 });
+
+function toggleZenMode() {
+  document.body.classList.toggle("zen-mode");
+  const btn = document.getElementById("zenToggle");
+  if (document.body.classList.contains("zen-mode")) {
+    btn.textContent = "❌";
+    btn.title = "Salir de Modo Zen";
+  } else {
+    btn.textContent = "🧘";
+    btn.title = "Modo Zen";
+  }
+}

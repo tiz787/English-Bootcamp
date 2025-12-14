@@ -1,0 +1,189 @@
+/* ========================================
+   🧩 INTERACTIVE EXERCISES STYLES
+   ======================================== */
+
+/* --- Drag and Drop --- */
+.draggable-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 20px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px dashed var(--border-default);
+  min-height: 80px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.draggable-item {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: grab;
+  user-select: none;
+  border: 1px solid var(--border-subtle);
+  transition: all 0.2s ease;
+  font-family: "JetBrains Mono", monospace;
+}
+
+.draggable-item:active {
+  cursor: grabbing;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-color: var(--primary-500);
+}
+
+.draggable-item.dragging {
+  opacity: 0.5;
+}
+
+.drop-zone {
+  background: var(--bg-tertiary);
+  border: 2px dashed var(--primary-500);
+}
+
+/* --- Fill in the Blanks --- */
+.fill-blanks-container {
+  line-height: 2;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+.blank-input {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--text-muted);
+  color: var(--primary-400);
+  font-weight: bold;
+  text-align: center;
+  width: 100px;
+  margin: 0 5px;
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+
+.blank-input:focus {
+  outline: none;
+  border-bottom-color: var(--primary-500);
+}
+
+.blank-input.correct {
+  border-bottom-color: var(--success-500);
+  color: var(--success-400);
+}
+
+.blank-input.incorrect {
+  border-bottom-color: var(--error-500);
+  color: var(--error-400);
+}
+
+/* --- Flashcards --- */
+.flashcard-container {
+  perspective: 1000px;
+  width: 100%;
+  max-width: 400px;
+  height: 250px;
+  margin: 20px auto;
+  cursor: pointer;
+}
+
+.flashcard {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.flashcard-container.flipped .flashcard {
+  transform: rotateY(180deg);
+}
+
+.flashcard-front,
+.flashcard-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid var(--border-default);
+}
+
+.flashcard-front {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.flashcard-back {
+  background: var(--bg-elevated);
+  color: var(--primary-300);
+  transform: rotateY(180deg);
+}
+
+.flashcard-title {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.flashcard-content {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.flashcard-hint {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  margin-top: 15px;
+}
+
+/* --- Exercise Controls --- */
+.exercise-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-check {
+  background: var(--primary-600);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-check:hover {
+  background: var(--primary-500);
+}
+
+.feedback-msg {
+  text-align: center;
+  margin-top: 15px;
+  font-weight: 500;
+  min-height: 24px;
+}
+
+.feedback-success {
+  color: var(--success-400);
+}
+
+.feedback-error {
+  color: var(--error-400);
+}

@@ -237,6 +237,13 @@ window.renderLessons = function () {
                           <!-- NEW: Enhanced Study Plan Section -->
                           ${studyPlanHtml}
 
+                          <!-- Interactive Exercise Container -->
+                          ${
+                            dayData.exercise
+                              ? `<div id="exercise-d${d}" style="margin-top: 20px;"></div>`
+                              : ""
+                          }
+
                           <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color);">
                               <p><strong>📺 Material de Estudio:</strong> ${
                                 dayData.material || "N/A"
@@ -259,6 +266,24 @@ window.renderLessons = function () {
   });
 
   container.innerHTML = html;
+
+  // Initialize Interactive Exercises
+  if (typeof Exercises !== "undefined") {
+    dailyTopics.forEach((day) => {
+      if (day.exercise) {
+        const containerId = `exercise-d${day.d}`;
+        if (day.exercise.type === "drag-drop") {
+          Exercises.renderDragAndDrop(containerId, day.exercise.data);
+        } else if (day.exercise.type === "fill-blanks") {
+          Exercises.renderFillInBlanks(
+            containerId,
+            day.exercise.text,
+            day.exercise.hidden
+          );
+        }
+      }
+    });
+  }
 
   // Re-initialize any state if needed (like checking completed days)
   if (typeof updateUI === "function") updateUI();

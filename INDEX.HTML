@@ -16,6 +16,7 @@
     />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="pomodoro.css" />
+    <link rel="stylesheet" href="exercises.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
@@ -160,6 +161,20 @@
 
         <button id="themeToggle" onclick="toggleTheme()" title="Cambiar tema">
           🌙
+        </button>
+        <button
+          id="zenToggle"
+          onclick="toggleZenMode()"
+          title="Modo Zen"
+          style="
+            margin-left: 10px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+          "
+        >
+          🧘
         </button>
       </div>
     </div>
@@ -481,6 +496,9 @@
           </div>
         </div>
 
+        <!-- DASHBOARD -->
+        <div id="dashboard-container" style="margin-bottom: 40px"></div>
+
         <!-- CONTENEDOR DE LECCIONES GENERADO DINÁMICAMENTE -->
         <div id="lessons-container"></div>
       </div>
@@ -499,7 +517,9 @@
     </div>
 
     <script src="main.js"></script>
+    <script src="pomodoro.js"></script>
+    <script src="study-plan-renderer.js"></script>
+    <script src="exercises.js"></script>
+    <script src="dashboard.js"></script>
   </body>
 </html>
-<script src="pomodoro.js"></script>
-<script src="study-plan-renderer.js"></script>
