@@ -7,6 +7,9 @@ const Dashboard = {
   charts: {},
 
   init: () => {
+    const container = document.getElementById("dashboard-container");
+    if (!container) return; // Stop if container doesn't exist
+
     Dashboard.renderStructure();
     Dashboard.updateStats();
     Dashboard.initCharts();
@@ -47,8 +50,14 @@ const Dashboard = {
                 <h4>📈 Progreso Semanal</h4>
                 <canvas id="progressChart"></canvas>
             </div>
-
-            
+            <div class="chart-card">
+                <h4>🧠 Habilidades</h4>
+                <canvas id="skillsChart"></canvas>
+            </div>
+            <div class="chart-card wide">
+                <h4>📅 Actividad (Heatmap)</h4>
+                <div id="heatmap-grid" class="heatmap-grid"></div>
+            </div>
         </div>
     `;
   },

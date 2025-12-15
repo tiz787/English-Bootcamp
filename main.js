@@ -3102,12 +3102,33 @@ function startQuiz(dayId) {
   // Verificar si puede tomar el quiz
   if (!canTakeQuiz(dayId)) {
     const container = document.getElementById(`quiz-${dayId}`);
+
+    // Lógica de reintento especial
+    if (!attempts.hasRetried) {
+      container.innerHTML = `
+          <div style="text-align:center; padding:20px; background:#fff7ed; border-radius:12px; border:1px solid #fed7aa;">
+            <p style="font-size:1.2rem; color:#9a3412; margin-bottom:10px;">⚠️ Has agotado los 3 intentos estándar</p>
+            <p style="color:#7c2d12;">Tu mejor puntuación hasta ahora: <strong>${Math.max(
+              ...attempts.scores
+            )}%</strong></p>
+            <div style="margin-top: 15px;">
+                <p style="margin-bottom: 10px;">¿Deseas una última oportunidad? (Test de 10 preguntas)</p>
+                <button class="btn-action" onclick="startRetryQuiz('${dayId}')">🔄 Reintentar Nuevamente</button>
+            </div>
+          </div>
+        `;
+      container.classList.add("active");
+      return;
+    }
+
     container.innerHTML = `
       <div style="text-align:center; padding:20px; background:#fef2f2; border-radius:12px; border:1px solid #fecaca;">
-        <p style="font-size:1.2rem; color:#991b1b; margin-bottom:10px;">⚠️ Has agotado los 3 intentos para este test</p>
-        <p style="color:#7f1d1d;">Tu mejor puntuación: <strong>${Math.max(
-          ...attempts.scores
-        )}%</strong></p>
+        <p style="font-size:1.2rem; color:#991b1b; margin-bottom:10px;">⚠️ Has agotado todos los intentos</p>
+        <p style="color:#7f1d1d;">Tu puntuación final: <strong>${
+          attempts.finalScore !== undefined
+            ? attempts.finalScore
+            : Math.max(...attempts.scores)
+        }%</strong></p>
         <p style="color:var(--text-light); font-size:0.9rem; margin-top:10px;">Revisa el material y practica con las flashcards.</p>
       </div>
     `;
@@ -3142,6 +3163,7 @@ function startQuiz(dayId) {
     correctAnswers: 0,
     topicsMissed: [],
     questionsAnswered: 0,
+    isRetry: false,
   };
 
   const qList = questions[dayId] || [];
@@ -3153,9 +3175,9 @@ function startQuiz(dayId) {
     const div = document.createElement("div");
     div.className = "quiz-question";
 
-    const p = document.createElement("p");
-    p.innerText = `${index + 1}. ${item.q}`;
-    div.appendChild(p);
+    const h3 = document.createElement("h3");
+    h3.innerText = `${index + 1}. ${item.q}`;
+    div.appendChild(h3);
 
     const optionsDiv = document.createElement("div");
     optionsDiv.className = "quiz-options";
@@ -3163,6 +3185,94 @@ function startQuiz(dayId) {
     item.options.forEach((opt, idx) => {
       const btn = document.createElement("button");
       btn.innerText = opt;
+      btn.className = "quiz-option";
+      btn.dataset.letter = String.fromCharCode(65 + idx);
+
+      btn.onclick = function () {
+        const allBtns = optionsDiv.querySelectorAll("button");
+        allBtns.forEach((b) => {
+          b.disabled = true;
+          b.style.cursor = "default";
+        });
+
+        currentQuizState.questionsAnswered++;
+
+        if (idx === item.correct) {
+          btn.classList.add("correct");
+          btn.innerHTML += ` ✅ <br><small>${item.feedback}</small>`;
+          currentQuizState.correctAnswers++;
+        } else {
+          btn.classList.add("incorrect");
+          allBtns[item.correct].classList.add("correct");
+          btn.innerHTML += ` ❌`;
+          currentQuizState.topicsMissed.push(item.topic);
+        }
+
+        if (
+          currentQuizState.questionsAnswered === currentQuizState.totalQuestions
+        ) {
+          finishQuiz();
+        }
+      };
+      optionsDiv.appendChild(btn);
+    });
+    div.appendChild(optionsDiv);
+    container.appendChild(div);
+  });
+}
+
+function startRetryQuiz(dayId) {
+  const container = document.getElementById(`quiz-${dayId}`);
+  container.innerHTML = "";
+  container.classList.add("active");
+
+  // Mostrar badge de intento extra
+  const attemptsInfo = document.createElement("div");
+  attemptsInfo.className = "attempts-info";
+  attemptsInfo.innerHTML = `
+    <span class="attempts-badge" style="background: #f59e0b; color: white;">Intento Extra (Desafío)</span>
+  `;
+  container.appendChild(attemptsInfo);
+
+  currentQuizState = {
+    dayId: dayId,
+    totalQuestions: 0,
+    correctAnswers: 0,
+    topicsMissed: [],
+    questionsAnswered: 0,
+    isRetry: true,
+  };
+
+  let qList = questions[dayId] || [];
+  // Asegurar 10 preguntas duplicando si es necesario
+  let extendedQuestions = [];
+  if (qList.length > 0) {
+    while (extendedQuestions.length < 10) {
+      extendedQuestions = extendedQuestions.concat(qList);
+    }
+    extendedQuestions = extendedQuestions.slice(0, 10);
+  }
+
+  // Aleatorizar
+  const randomQ = [...extendedQuestions].sort(() => 0.5 - Math.random());
+  currentQuizState.totalQuestions = randomQ.length;
+
+  randomQ.forEach((item, index) => {
+    const div = document.createElement("div");
+    div.className = "quiz-question";
+
+    const h3 = document.createElement("h3");
+    h3.innerText = `${index + 1}. ${item.q}`;
+    div.appendChild(h3);
+
+    const optionsDiv = document.createElement("div");
+    optionsDiv.className = "quiz-options";
+
+    item.options.forEach((opt, idx) => {
+      const btn = document.createElement("button");
+      btn.innerText = opt;
+      btn.className = "quiz-option";
+      btn.dataset.letter = String.fromCharCode(65 + idx);
 
       btn.onclick = function () {
         const allBtns = optionsDiv.querySelectorAll("button");
@@ -3204,13 +3314,24 @@ function finishQuiz() {
 
   // Registrar el intento
   const attempts = getQuizAttempts(currentQuizState.dayId);
-  attempts.attempts++;
-  attempts.scores.push(score);
+
+  if (currentQuizState.isRetry) {
+    attempts.hasRetried = true;
+    attempts.finalScore = score;
+  } else {
+    attempts.attempts++;
+    attempts.scores.push(score);
+  }
+
   saveQuizAttempts();
 
-  // Solo guardar progreso si aprobó (70%+) o es el mejor intento
-  const bestScore = Math.max(...attempts.scores);
-  if (score >= 70 || score === bestScore) {
+  // Solo guardar progreso si aprobó (70%+) o es el mejor intento (o es el retry final)
+  const bestScore =
+    attempts.finalScore !== undefined
+      ? attempts.finalScore
+      : Math.max(...attempts.scores);
+
+  if (score >= 70 || score === bestScore || currentQuizState.isRetry) {
     saveDayProgress(
       currentQuizState.dayId,
       bestScore,
@@ -3222,6 +3343,31 @@ function finishQuiz() {
   const container = document.getElementById(`quiz-${currentQuizState.dayId}`);
   const resultDiv = document.createElement("div");
   resultDiv.className = "quiz-result";
+
+  let retryButtonHtml = "";
+
+  if (!currentQuizState.isRetry) {
+    if (attempts.attempts < attempts.maxAttempts) {
+      retryButtonHtml = `
+            <button class="btn-action" onclick="startQuiz('${
+              currentQuizState.dayId
+            }')" style="margin-top:15px;">
+              🔄 Intentar de nuevo (${
+                attempts.maxAttempts - attempts.attempts
+              } restantes)
+            </button>
+          `;
+    } else if (!attempts.hasRetried) {
+      retryButtonHtml = `
+            <div style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;">
+                <p style="margin-bottom: 10px; font-weight: bold;">¡Has agotado tus 3 intentos!</p>
+                <p style="margin-bottom: 10px;">¿Deseas una última oportunidad? (Test de 10 preguntas)</p>
+                <button class="btn-action" onclick="startRetryQuiz('${currentQuizState.dayId}')">🔄 Reintentar Nuevamente</button>
+            </div>
+          `;
+    }
+  }
+
   resultDiv.innerHTML = `
     <div style="text-align:center; padding:20px; background:${
       score >= 70 ? "#f0fdf4" : "#fef2f2"
@@ -3231,22 +3377,13 @@ function finishQuiz() {
       };">
         ${score >= 70 ? "🎉" : "📚"} Puntuación: ${score}%
       </p>
-      <p style="color:var(--text-light);">Intentos usados: ${
-        attempts.attempts
-      }/${attempts.maxAttempts}</p>
       ${
-        attempts.attempts < attempts.maxAttempts && score < 100
-          ? `
-        <button class="btn-action" onclick="startQuiz('${
-          currentQuizState.dayId
-        }')" style="margin-top:15px;">
-          🔄 Intentar de nuevo (${
-            attempts.maxAttempts - attempts.attempts
-          } restantes)
-        </button>
-      `
-          : ""
+        !currentQuizState.isRetry
+          ? `<p style="color:var(--text-light);">Intentos usados: ${attempts.attempts}/${attempts.maxAttempts}</p>`
+          : '<p style="color:var(--text-light);">Resultado Final del Desafío</p>'
       }
+      
+      ${retryButtonHtml}
     </div>
   `;
   container.appendChild(resultDiv);
@@ -3928,6 +4065,8 @@ function resetProgress() {
     localStorage.removeItem("englishStreak");
     localStorage.removeItem("englishXP");
     localStorage.removeItem("englishStudyTime");
+    localStorage.removeItem("quizAttempts");
+    localStorage.removeItem("weeklyExamAttempts");
     location.reload();
   }
 }

@@ -254,8 +254,8 @@ window.renderLessons = function () {
                       <!-- Quiz Section -->
                       <div class="quiz-section">
                           <h4>📝 Mini-Test del Día</h4>
-                          <div id="quiz-container-d${d}">
-                              <button class="btn-action" onclick="startDailyQuiz(${d})">Comenzar Test</button>
+                          <div id="quiz-d${d}">
+                              <button class="btn-action" onclick="startQuiz('d${d}')">Comenzar Test</button>
                           </div>
                       </div>
                   </div>
