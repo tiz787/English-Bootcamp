@@ -3015,18 +3015,7 @@ function updateStats() {
 
 // --- 3. LÓGICA DE INTERFAZ ---
 function toggleDay(id) {
-  // Check if parent week is locked
-  const dayCard = document.getElementById(`card-${id}`);
-  if (dayCard) {
-    const weekSection = dayCard.closest(".week-section");
-    if (weekSection && weekSection.classList.contains("locked")) {
-      alert(
-        "🔒 Esta semana está bloqueada. Completa la semana anterior o aprueba el examen de validación."
-      );
-      return;
-    }
-  }
-
+  // Acceso libre a todos los días sin verificación de bloqueo
   const body = document.getElementById(id);
   const icon = body.previousElementSibling.querySelector(".toggle-icon");
 
@@ -4410,25 +4399,11 @@ window.submitExam = function (level) {
 
 // --- WEEK PROGRESSION LOGIC ---
 function checkWeekUnlocks() {
-  const savedData =
-    JSON.parse(localStorage.getItem("englishBootcampProgress")) || {};
-  const skipData = JSON.parse(localStorage.getItem("skipExamResults")) || {};
-
-  // Week 1 is always open
-  // Weeks 2-8
-  for (let i = 2; i <= 8; i++) {
+  // Desbloquear TODAS las semanas para acceso libre
+  for (let i = 1; i <= 8; i++) {
     const weekElem = document.getElementById(`week-${i}`);
     if (weekElem) {
-      // Unlock if previous week passed OR skip exam passed
-      const prevWeekPassed = savedData[`level${i - 1}Passed`];
-      const skipPassed =
-        skipData[`toWeek${i}`] && skipData[`toWeek${i}`].passed;
-
-      if (prevWeekPassed || skipPassed) {
-        weekElem.classList.remove("locked");
-      } else {
-        weekElem.classList.add("locked");
-      }
+      weekElem.classList.remove("locked");
     }
   }
 }
